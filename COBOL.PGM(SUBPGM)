@@ -1,0 +1,23 @@
+     IDENTIFICATION DIVISION.                               
+     PROGRAM-ID.    SUBPGM.                                 
+     AUTHOR.        MANASA.                                 
+     INSTALLATION.  IBM E&T.                                
+     DATE-WRITTEN.  8/17/17.                                
+     DATE-COMPILED.                                         
+     SECURITY.      NONE.                                   
+  ******************************************************    
+  * MY SECOND PROGRAM                                       
+  ******************************************************    
+     ENVIRONMENT DIVISION.                                  
+     DATA DIVISION.                                         
+     WORKING-STORAGE SECTION.                               
+   01   WS-A      PIC 9(1) VALUE 8.                         
+   01   WS-B      PIC 9(1) VALUE 7.                         
+     01   WS-C      PIC S9(1) VALUE 5.                   
+  01   WS-C-EDIT PIC -9.                              
+    PROCEDURE DIVISION.                               
+               SUBTRACT WS-A  FROM WS-B GIVING WS-C.  
+               DISPLAY WS-C.                          
+               MOVE WS-C TO WS-C-EDIT.                
+               DISPLAY WS-C-EDIT.                     
+               STOP RUN.                              
