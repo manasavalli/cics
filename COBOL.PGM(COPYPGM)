@@ -1,0 +1,21 @@
+    IDENTIFICATION DIVISION.                           
+    PROGRAM-ID.    COPYPGM.                            
+    AUTHOR.        MANASA.                             
+    INSTALLATION.  IBM E&T.                            
+    DATE-WRITTEN.  8/17/17.                            
+    DATE-COMPILED.                                     
+    SECURITY.      NONE.                               
+ ******************************************************
+ * MY SECOND PROGRAM                                   
+ ******************************************************
+    ENVIRONMENT DIVISION.                              
+    DATA DIVISION.                                     
+    WORKING-STORAGE SECTION.                           
+  01 EMPLOYEE-RECORD.                                  
+     COPY EMPCB.                                       
+           05 FILLER            PIC X(5)  VALUE "   "   .             
+      05 EMPLOYEE-ADDRESS  PIC X(60) VALUE "BANGLORE".           
+      66 EMP-NAM-ADD RENAMES EMPLOYEE-NAME THRU EMPLOYEE-ADDRESS.
+     PROCEDURE DIVISION.                                         
+                DISPLAY EMP-NAM-ADD.                             
+                STOP RUN.                                        
