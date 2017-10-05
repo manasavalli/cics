@@ -1,0 +1,43 @@
+     IDENTIFICATION DIVISION.                           
+     PROGRAM-ID.    PFTHRPGM.                           
+     AUTHOR.        MANASA.                             
+     INSTALLATION.  IBM E&T.                            
+     DATE-WRITTEN.  8/17/17.                            
+     DATE-COMPILED.                                     
+     SECURITY.      NONE.                               
+  ******************************************************
+  * MY SECOND PROGRAM                                   
+  ******************************************************
+     ENVIRONMENT DIVISION.                              
+     DATA DIVISION.                                     
+     WORKING-STORAGE SECTION.                           
+   01   WS-A      PIC 9(1) VALUE 4.                     
+   01   WS-B      PIC 9(1) VALUE 8.                     
+      01   WS-C      PIC 9(2).                           
+     PROCEDURE DIVISION.                              
+   000-MAIN-PARA.                                     
+               PERFORM 100-ADD-PARA THRU 300-MUL-PARA.
+                STOP RUN.                             
+   100-ADD-PARA.                                      
+                DISPLAY "A:" WS-A.                    
+                DISPLAY "B:" WS-B.                    
+                DISPLAY "C:" WS-C.                    
+                COMPUTE WS-C = WS-A + WS-B.           
+                DISPLAY "A:" WS-A.                    
+                DISPLAY "B:" WS-B.                    
+                DISPLAY "C:" WS-C.                    
+   200-SUB-PARA.                                      
+                DISPLAY "A:" WS-A.                    
+                DISPLAY "B:" WS-B.                    
+                DISPLAY "C:" WS-C.                    
+                COMPUTE WS-C = WS-B - WS-A.           
+                               DISPLAY "A:" WS-A.                  
+               DISPLAY "B:" WS-B.                  
+               DISPLAY "C:" WS-C.                  
+  300-MUL-PARA.                                    
+               DISPLAY "A:" WS-A.                  
+               DISPLAY "B:" WS-B.                  
+               DISPLAY "C:" WS-C.                  
+               COMPUTE WS-C = WS-A * WS-B.         
+               DISPLAY "A:" WS-A.                  
+               DISPLAY "B:" WS-B.                  
