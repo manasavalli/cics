@@ -1,0 +1,29 @@
+      IDENTIFICATION DIVISION.                             
+      PROGRAM-ID.    EX.                                   
+      AUTHOR.        MANASA.                               
+      INSTALLATION.  IBM E&T.                              
+      DATE-WRITTEN.  8/17/17.                              
+      DATE-COMPILED.                                       
+      SECURITY.      NONE.                                 
+   ******************************************************  
+   * READING STUDENT DETAILS FROM A FILE PROGRAM           
+   ******************************************************  
+      ENVIRONMENT DIVISION.                                
+      INPUT-OUTPUT SECTION.                                
+      FILE-CONTROL.                                        
+           SELECT INPFILE ASSIGN TO INDD                   
+           ORGANIZATION IS SEQUENTIAL                      
+                     ACCESS IS SEQUENTIAL.                
+     DATA DIVISION.                            
+     FILE SECTION.                             
+     FD INPFILE                                
+          RECORDING MODE IS F.                 
+   01 INPREC.                                  
+       05 FS-EMPLOYEE-CODE    PIC X(5).        
+       05 FS-EMPLOYEE-NAME  PIC X(15).         
+       05 FS-EMPLOYEE-DEPT   PIC X(5).         
+       05 FS-EMPLOYEE-ADDRESS    PIC X(25).    
+       05 FS-EMPLOYEE-BASIC-PAY     PIC 9(5).  
+       05                           PIC X(25). 
+     PROCEDURE DIVISION.                       
+        STOP RUN.                              
