@@ -1,0 +1,25 @@
+    IDENTIFICATION DIVISION.                              
+    PROGRAM-ID.    DATEJULI.                              
+    AUTHOR.        MANASA.                                
+    INSTALLATION.  IBM E&T.                               
+    DATE-WRITTEN.  8/17/17.                               
+    DATE-COMPILED.                                        
+    SECURITY.      NONE.                                  
+ ******************************************************   
+ * MY FIRST PROGRAM                                       
+ ******************************************************   
+    ENVIRONMENT DIVISION.                                 
+    DATA DIVISION.                                        
+    WORKING-STORAGE SECTION.                              
+  77 WS-DT  PIC 9(7).                                     
+  77 WS-JDT PIC 9(7).                                     
+      PROCEDURE DIVISION.                                     
+        ACCEPT WS-DT FROM DAY YYYYDDD.                      
+        COMPUTE WS-JDT = FUNCTION INTEGER-OF-DAY(WS-DT).    
+        DISPLAY WS-DT.                                      
+        DISPLAY WS-JDT.                                     
+        ADD 300 TO WS-JDT.                                  
+        DISPLAY WS-JDT.                                     
+        COMPUTE WS-JDT = FUNCTION DAY-OF-INTEGER(WS-JDT).   
+        DISPLAY WS-JDT.                                     
+               STOP RUN.                                    
