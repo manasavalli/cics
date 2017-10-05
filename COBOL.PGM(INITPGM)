@@ -1,0 +1,29 @@
+     IDENTIFICATION DIVISION.                           
+     PROGRAM-ID.    INITPGM.                            
+     AUTHOR.        MANASA.                             
+     INSTALLATION.  IBM E&T.                            
+     DATE-WRITTEN.  8/17/17.                            
+     DATE-COMPILED.                                     
+     SECURITY.      NONE.                               
+  ******************************************************
+  * MY SECOND PROGRAM                                   
+  ******************************************************
+     ENVIRONMENT DIVISION.                              
+     DATA DIVISION.                                     
+     WORKING-STORAGE SECTION.                           
+   01   MISC-DATA.                                      
+      03 SUB       PIC 9(4) COMP VALUE 1.               
+          03 COUNTER   PIC 9(9) COMP-3 VALUE 5.                        
+    03 LABEL-NM  PIC A(20)  VALUE "HELLO".                       
+    03 FILLER    PIC X(5)   VALUE "WORLD".                       
+    03 PAGE-NO   PIC ZZ9   VALUE  "5".                           
+    03 DESCRIPTION    PIC X(40)   VALUE "HELLO WORLD".           
+   PROCEDURE DIVISION.                                           
+         DISPLAY MISC-DATA.                                      
+         DISPLAY SUB.                                            
+         DISPLAY COUNTER.                                        
+        INITIALIZE MISC-DATA REPLACING ALPHANUMERIC DATA BY "AB".
+         DISPLAY MISC-DATA.                                      
+         DISPLAY SUB.                                            
+         DISPLAY COUNTER.                                        
+         STOP  RUN.                                              
