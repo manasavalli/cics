@@ -1,0 +1,19 @@
+MAPAB1  DFHMSD TYPE=&SYSPARM,MODE=INOUT,TERM=ALL,                      X
+               LANG=COBOL,TIOAPFX=YES,CTRL=(FREEKB),DSATTS=COLOR,      X
+               MAPATTS=COLOR                                            
+ORDER   DFHMDI SIZE=(24,80),LINE=1,COLUMN=1                             
+DATFLD   DFHMDF POS=(1,20),LENGTH=8,ATTRB=ASKIP                         
+         DFHMDF POS=(2,1),LENGTH=4,INITIAL='NAME',ATTRB=ASKIP,COLOR=RED 
+NAME     DFHMDF POS=(2,6),LENGTH=20,ATTRB=(UNPROT,IC)                   
+         DFHMDF POS=(2,27),LENGTH=1,ATTRB=ASKIP                         
+         DFHMDF POS=(3,1),LENGTH=8,INITIAL='STOCK NO',ATTRB=ASKIP,     X
+               COLOR=BLUE                                               
+STOCK    DFHMDF POS=(3,10),LENGTH=6,ATTRB=(UNPROT,NUM)                  
+         DFHMDF POS=(3,17),LENGTH=1,ATTRB=ASKIP                         
+         DFHMDF POS=(4,1),LENGTH=8,INITIAL='QUANTITY',ATTRB=ASKIP,     X
+               COLOR=PINK                                               
+QUAN     DFHMDF POS=(4,10),LENGTH=10,ATTRB=(UNPROT,NUM)                 
+          DFHMDF POS=(4,21),LENGTH=1,ATTRB=PROT    
+ MSG      DFHMDF POS=(24,1),LENGTH=75,ATTRB=ASKIP  
+          DFHMSD TYPE=FINAL                        
+          END                                      
