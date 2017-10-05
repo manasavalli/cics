@@ -1,0 +1,149 @@
+    IDENTIFICATION DIVISION.                            
+    PROGRAM-ID.    KSDSWPGM.                            
+    AUTHOR.        MANASA.                              
+    INSTALLATION.  IBM E&T.                             
+    DATE-WRITTEN.  8/17/17.                             
+    DATE-COMPILED.                                      
+    SECURITY.      NONE.                                
+ ****************************************************** 
+ * READING STUDENT DETAILS FROM A FILE PROGRAM          
+ ****************************************************** 
+    ENVIRONMENT DIVISION.                               
+    INPUT-OUTPUT SECTION.                               
+    FILE-CONTROL.                                       
+         SELECT KSDSST ASSIGN TO KSDSDD                 
+         ORGANIZATION IS INDEXED                        
+                    ACCESS IS SEQUENTIAL                   
+           RECORD KEY IS FS-STUDNO                
+           FILE STATUS IS WS-KSDSST-ST VSAM-RETN. 
+                                                  
+           SELECT STUDF1 ASSIGN TO STUDD1         
+           ORGANIZATION IS SEQUENTIAL             
+           ACCESS IS SEQUENTIAL                   
+           FILE STATUS IS WS-STUDF1-ST.           
+                                                  
+      DATA DIVISION.                              
+      FILE SECTION.                               
+      FD KSDSST.                                  
+    01 KSDSSTRE.                                  
+        05 FS-STUDNO    PIC X(1).                 
+        05 FS-STUDNAME  PIC X(6).                 
+        05 FS-ENGLISH   PIC 9(3).                 
+        05 FS-SOCIAL    PIC 9(3).                 
+        05 FS-MATHS     PIC 9(3).                 
+               05 FS-SCIENCE   PIC 9(3).        
+       05 FS-TELUGU    PIC 9(3).        
+       05              PIC X(58).       
+     FD STUDF1                          
+          RECORDING MODE IS F.          
+   01 STUD1REC PIC X(80).               
+     WORKING-STORAGE SECTION.           
+   01   WS-KSDSST-EOF PIC X VALUE 'N'.  
+      88 EOF-KSDSST  VALUE 'Y'.         
+   01   VSAM-RETN.                      
+      05 VSAM-RETN-CODE PIC 99 BINARY.  
+      05 VSAM-FUNC-CODE PIC 99 BINARY.  
+      05 VSAM-FDBK-CODE PIC 99 BINARY.  
+   01   WS-STUD-REC.                    
+       05 RS-STUDNO    PIC X(1).        
+       05              PIC X(2).        
+       05 RS-STUDNAME  PIC X(6).        
+       05              PIC X(2).        
+              05 RS-ENGLISH   PIC 9(3).                  
+       05              PIC X(2).                  
+       05 RS-SOCIAL    PIC 9(3).                  
+       05              PIC X(2).                  
+       05 RS-MATHS     PIC 9(3).                  
+       05              PIC X(2).                  
+       05 RS-SCIENCE   PIC 9(3).                  
+       05              PIC X(2).                  
+       05 RS-TELUGU    PIC 9(3).                  
+       05              PIC X(2).                  
+       05 RS-TOTAL     PIC 9(3).                  
+       05              PIC X(2).                  
+       05 RS-AVG       PIC 9(3).                  
+       05              PIC X(36).                 
+   01   WS-STUD-AST  PIC X(80) VALUE ALL '*'.     
+   01   WS-STUD-TIT.                              
+       05 RS1-STUDNO    PIC X(2) VALUE 'NO'.      
+       05              PIC X(1).                  
+              05 RS1-STUDNAME  PIC X(6) VALUE 'NAME'. 
+       05              PIC X(2).               
+       05 RS1-ENGLISH   PIC X(3) VALUE 'M1'.   
+       05              PIC X(2).               
+       05 RS1-SOCIAL    PIC X(3) VALUE 'M2'.   
+       05              PIC X(2).               
+       05 RS1-MATHS     PIC X(3) VALUE 'M3'.   
+       05              PIC X(2).               
+       05 RS1-SCIENCE   PIC X(3) VALUE 'M4'.   
+       05              PIC X(2).               
+       05 RS1-TELUGU    PIC X(3) VALUE 'M5'.   
+       05              PIC X(2).               
+       05 RS1-TOTAL     PIC X(3) VALUE 'TOT'.  
+       05              PIC X(2).               
+       05 RS1-AVG       PIC X(3) VALUE 'AVG'.  
+       05              PIC X(36).              
+   77   WS-STUDF1-ST      PIC X(2).            
+   77   WS-KSDSST-ST       PIC X(2).           
+          77   WS-TOTAL            PIC 9(4).                         
+   77   WS-AVG              PIC 9(3)V9(2).                    
+     PROCEDURE DIVISION.                                      
+     000-MAIN-PARA.                                           
+       PERFORM 100-OPEN-FILE-PARA.                            
+       IF VSAM-RETN-CODE = 00 AND WS-STUDF1-ST = '00'         
+         PERFORM 400-WRITE-HDR-PARA                           
+         PERFORM 200-READ-FILE-PARA UNTIL WS-KSDSST-EOF = 'Y' 
+         PERFORM 500-WRITE-FOOTER-PARA                        
+       ELSE                                                   
+         DISPLAY 'ERROR IN OPEN '  WS-STUDF1-ST               
+       END-IF.                                                
+       PERFORM 300-CLOSE-FILE-PARA.                           
+       STOP RUN.                                              
+     100-OPEN-FILE-PARA.                                      
+         OPEN INPUT KSDSST.                                   
+         OPEN OUTPUT STUDF1.                                  
+     200-READ-FILE-PARA.                                      
+              READ KSDSST                                              
+            AT END                                                
+               SET EOF-KSDSST TO TRUE                             
+            NOT AT END                                            
+               PERFORM 210-CALC-PARA                              
+               PERFORM 211-WRITE-PARA                             
+         END-READ.                                                
+                                                                  
+     300-CLOSE-FILE-PARA.                                         
+         CLOSE KSDSST.                                            
+         CLOSE STUDF1.                                            
+     210-CALC-PARA.                                               
+           COMPUTE WS-TOTAL = FS-MATHS + FS-SCIENCE + FS-ENGLISH  
+                                +  FS-TELUGU + FS-SOCIAL.         
+           COMPUTE WS-AVG = WS-TOTAL / 5.                         
+     211-WRITE-PARA.                                              
+           DISPLAY "FS-STUDNO:  "  FS-STUDNO.                     
+           DISPLAY "FS-STUDNAME:  "  FS-STUDNAME.                 
+                    DISPLAY "FS-MATHS:  "  FS-MATHS.        
+         DISPLAY "FS-SCIENCE:  "  FS-SCIENCE.    
+         DISPLAY "FS-SOCIAL:  "  FS-SOCIAL.      
+         DISPLAY "FS-ENGLISH:  "  FS-ENGLISH.    
+         DISPLAY "FS-TELUGU:  "  FS-TELUGU.      
+         DISPLAY "WS-TOTAL:  "  WS-TOTAL.        
+         DISPLAY "WS-AVERAGE: " WS-AVG.          
+         DISPLAY "                   ".          
+         MOVE FS-STUDNO TO RS-STUDNO.            
+         MOVE FS-STUDNAME TO RS-STUDNAME.        
+         MOVE FS-MATHS TO RS-MATHS.              
+         MOVE FS-SCIENCE TO RS-SCIENCE.          
+         MOVE FS-SOCIAL TO RS-SOCIAL.            
+         MOVE FS-ENGLISH TO RS-ENGLISH.          
+         MOVE FS-TELUGU TO RS-TELUGU.            
+         MOVE WS-TOTAL TO RS-TOTAL.              
+         MOVE WS-AVG TO RS-AVG.                  
+         WRITE STUD1REC FROM WS-STUD-REC.        
+                  DISPLAY "WRITTEN TO THE FILE".  
+   400-WRITE-HDR-PARA.                   
+        WRITE STUD1REC FROM WS-STUD-AST. 
+        WRITE STUD1REC FROM WS-STUD-TIT. 
+        WRITE STUD1REC FROM WS-STUD-AST. 
+   500-WRITE-FOOTER-PARA.                
+        WRITE STUD1REC FROM WS-STUD-AST. 
+   
