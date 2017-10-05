@@ -1,0 +1,9 @@
+//TRNG139C JOB CLASS=A,MSGCLASS=H,NOTIFY=&SYSUID,TIME=(,1)         
+//IBMLIB    JCLLIB ORDER=('TRNG001.ALL.PROCLIB',ADCD.Z22A.PROCLIB) 
+//JS0010    EXEC  IGYWCL,                                          
+//            PGMLIB=TRNG139.COBOL.LOAD,                           
+//            GOPGM=CALCPGM                                        
+//STEPLIB   DD DSN=IGY520.SIGYCOMP,DISP=SHR                        
+//COBOL.SYSIN DD DSN=TRNG139.COBOL.PGM(CALCPGM),DISP=SHR           
+//COBOL.SYSLIB DD DSN=TRNG139.COBOL.COPYBOOK,DISP=SHR              
+//SYSPRINT DD SYSOUT=*                                             
