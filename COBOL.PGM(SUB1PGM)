@@ -1,0 +1,27 @@
+    IDENTIFICATION DIVISION.                            
+    PROGRAM-ID.    SUB1PGM.                             
+    AUTHOR.        MANASA.                              
+    INSTALLATION.  IBM E&T.                             
+    DATE-WRITTEN.  8/17/17.                             
+    DATE-COMPILED.                                      
+    SECURITY.      NONE.                                
+ ****************************************************** 
+ * MY SECOND PROGRAM                                    
+ ****************************************************** 
+    ENVIRONMENT DIVISION.                               
+    DATA DIVISION.                                      
+    LINKAGE SECTION.                                    
+  01 LS-VARS.                                           
+     05   LS-LENGTH PIC 99 BINARY.                      
+          05   LS-A      PIC 9(1).               
+     05   LS-B      PIC 9(1).               
+     05   LS-C      PIC 9(2).               
+    PROCEDURE DIVISION USING LS-VARS.       
+         DISPLAY "LS-A  "  LS-A.            
+         DISPLAY "LS-B  "  LS-B.            
+         DISPLAY "LS-C  "  LS-C.            
+         COMPUTE LS-C = LS-A + LS-B.        
+         DISPLAY "LS-A  "  LS-A.            
+         DISPLAY "LS-B  "  LS-B.            
+         DISPLAY "LS-C  "  LS-C.            
+               GOBACK.                      
