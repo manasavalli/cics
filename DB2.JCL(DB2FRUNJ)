@@ -1,0 +1,18 @@
+//TRNG139R JOB CLASS=A,MSGCLASS=H,NOTIFY=&SYSUID,REGION=0M             
+//*********************************************************************
+//* RUN JCL TO RUN BATCH COBOL / PLI - DB2 PROGRAMS                    
+//* REPLACE TRNG001 WITH UR ID .                                       
+//*********************************************************************
+//RUN      EXEC PGM=IKJEFT01,DYNAMNBR=20                               
+//STEPLIB  DD   DSN=DSNB10.SDSNLOAD,DISP=SHR                           
+//SYSTSPRT DD   SYSOUT=*                                               
+//SYSPRINT DD   SYSOUT=*                                               
+//SYSUDUMP DD   SYSOUT=*                                               
+//TRAIN2DD     DD   DSN=TRNG139.TEST.TRAIN2,DISP=SHR                   
+//TRAIN3DD     DD   DSN=TRNG139.TEST.TRAIN3,DISP=SHR                   
+//SYSTSIN  DD  *                                                       
+       DSN SYSTEM(DBBG)                                                
+       RUN PROGRAM(READF139) PLAN(READF139)  -                         
+       LIB('TRNG139.DB2.LOAD')                                         
+       END                                                             
+       
