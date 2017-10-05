@@ -1,0 +1,68 @@
+      IDENTIFICATION DIVISION.                     
+      PROGRAM-ID.    CURU1139.                     
+      ENVIRONMENT DIVISION.                        
+      DATA DIVISION.                               
+      WORKING-STORAGE SECTION.                     
+   01 WS-SQLCODE PIC -9(9).                        
+          EXEC SQL                                 
+            INCLUDE SQLCA                          
+          END-EXEC.                                
+          EXEC SQL                                 
+            INCLUDE EMPLOYEE                       
+          END-EXEC.                                
+          EXEC SQL                                 
+            DECLARE UPD_CUR CURSOR WITH HOLD FOR   
+             SELECT EMPNO,WORKDEPT,SALARY          
+                          FROM EMPLOYEE                                          
+             FOR UPDATE OF SALARY                                   
+          END-EXEC.                                                 
+      PROCEDURE DIVISION.                                           
+   000-MAIN-PARA.                                                   
+        PERFORM 100-OPEN-UPDCUR-PARA.                               
+        IF SQLCODE = 0                                              
+          PERFORM 200-QUERY-PARA UNTIL SQLCODE = 100 OR SQLCODE < 0 
+        ELSE                                                        
+          DISPLAY "ERROR IN OPEN"                                   
+        END-IF.                                                     
+        PERFORM 500-CLOSE-UPDCUR-PARA.                              
+              STOP RUN.                                             
+   100-OPEN-UPDCUR-PARA.                                            
+        EXEC SQL                                                    
+           OPEN UPD_CUR                                             
+        END-EXEC.                                                   
+   200-QUERY-PARA.                                                  
+             EXEC SQL                                   
+            FETCH UPD_CUR                            
+            INTO :EMPNO,                             
+                 :WORKDEPT,                          
+                 :SALARY                             
+          END-EXEC.                                  
+          PERFORM 300-EVALUATE-PARA.                 
+   300-EVALUATE-PARA.                                
+           MOVE SQLCODE TO WS-SQLCODE.               
+           EVALUATE SQLCODE                          
+               WHEN 0                                
+                   PERFORM 400-UPDATE-PARA           
+               WHEN 100                              
+                   DISPLAY 'NO ROWS END ' WS-SQLCODE 
+               WHEN OTHER                            
+                   DISPLAY 'ERROR ' WS-SQLCODE       
+           END-EVALUATE.                             
+   400-UPDATE-PARA.                                  
+            EXEC SQL                           
+           UPDATE EMPLOYEE                  
+           SET SALARY = 30000               
+           WHERE CURRENT OF UPD_CUR         
+         END-EXEC.                          
+         IF SQLCODE = 0                     
+            DISPLAY 'UPDATED'               
+            EXEC SQL                        
+              COMMIT                        
+            END-EXEC                        
+         ELSE                               
+            DISPLAY 'ERR'                   
+         END-IF.                            
+ 500-CLOSE-UPDCUR-PARA.                     
+        EXEC SQL                            
+           CLOSE UPD_CUR                    
+        END-EXEC.                           
