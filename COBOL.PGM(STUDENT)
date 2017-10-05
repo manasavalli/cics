@@ -1,0 +1,36 @@
+    IDENTIFICATION DIVISION.                             
+    PROGRAM-ID.    STUDENT.                              
+    AUTHOR.        MANASA.                               
+    INSTALLATION.  IBM E&T.                              
+    DATE-WRITTEN.  8/17/17.                              
+    DATE-COMPILED.                                       
+    SECURITY.      NONE.                                 
+ ******************************************************  
+ * MY FIRST PROGRAM                                      
+ ******************************************************  
+    ENVIRONMENT DIVISION.                                
+    DATA DIVISION.                                       
+    WORKING-STORAGE SECTION.                             
+  77 WS-NAME PIC X(20).                                  
+  77 WS-ROLLNO  PIC X(20).                               
+     77 WS-M1  PIC 9(3).                         
+   77 WS-M2  PIC 9(3).                         
+   77 WS-M3  PIC 9(3).                         
+   77 WS-M4  PIC 9(3).                         
+   77 WS-M5  PIC 9(3).                         
+     PROCEDURE DIVISION.                       
+         ACCEPT  WS-NAME.                      
+         ACCEPT  WS-ROLLNO.                    
+         ACCEPT  WS-M1.                        
+         ACCEPT  WS-M2.                        
+         ACCEPT  WS-M3.                        
+         ACCEPT  WS-M4.                        
+         ACCEPT  WS-M5.                        
+         DISPLAY WS-NAME.                      
+         DISPLAY WS-ROLLNO.                    
+         DISPLAY WS-M1.                        
+         DISPLAY WS-M2.                        
+         DISPLAY WS-M3.                        
+                DISPLAY WS-M4.        
+       DISPLAY WS-M5.        
+              STOP RUN.      
