@@ -1,0 +1,14 @@
+ //TRNG1391 JOB (ACCTII),'TRAINING',CLASS=A,                        
+ //         MSGCLASS=H,MSGLEVEL=(1,1),NOTIFY=&SYSUID                
+ //STEP01 EXEC PGM=IEFBR14                                          
+ //SYSPRINT DD SYSOUT=*                                             
+ //SYSOUT   DD SYSOUT=*                                             
+ //DD1      DD DSN=TRNG139.EXAMPLE.ESDSIEFB,DISP=(NEW,CATLG,DELETE),
+ //            SPACE=(TRK,(5,5)),                                   
+ //            RECORG=ES,                                           
+ //            LRECL=100                                            
+ //STEP02   EXEC PGM=IDCAMS,COND=(0,NE)                             
+ //SYSPRINT DD SYSOUT=*                                             
+ //SYSOUT   DD SYSOUT=*                                             
+ //SYSIN    DD *                                                    
+     LISTCAT ENTRIES(TRNG139.EXAMPLE.ESDSIEFB) ALL                  
