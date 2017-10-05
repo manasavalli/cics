@@ -1,0 +1,141 @@
+   IDENTIFICATION DIVISION.                    
+   PROGRAM-ID.    PROGAB39.                    
+   ENVIRONMENT DIVISION.                       
+   INPUT-OUTPUT SECTION.                       
+   FILE-CONTROL.                               
+        SELECT VSAB14 ASSIGN TO KSDSDD         
+        ORGANIZATION IS INDEXED                
+        ACCESS IS RANDOM                       
+        RECORD KEY IS FS-TRAIN-NUMBER          
+        FILE STATUS IS WS-KSDSCI-ST VSAM-RETN. 
+   DATA DIVISION.                              
+   FILE SECTION.                               
+   FD VSAB14.                                  
+ 01 KSDSCIRE.                                  
+     05 FS-TRAIN-NUMBER       PIC X(6).        
+             05 FS-TRAIN-NAME         PIC X(20).    
+        05 FS-TRAIN-TYPE         PIC X(1).     
+        05 FS-TRAIN-DEP-STN      PIC X(10).    
+        05 FS-TRAIN-DEP-TIME     PIC X(5).     
+        05 FS-TRAIN-ARR-STN      PIC X(10).    
+        05 FS-TRAIN-ARR-TIME     PIC X(5).     
+        05 FS-TRAIN-FARE         PIC X(6).     
+        05                       PIC X(37).    
+      WORKING-STORAGE SECTION.                 
+        COPY MAPAB39.                          
+        COPY DFHAID.                           
+    01 WS-RAWTIME PIC S9(15) COMP-3.           
+    01 ERR-CODE  PIC S9(8) COMP.               
+    01 WS-DT-TIME.                             
+       03 WS-DATE   PIC X(8).                  
+       03 WS-TIME   PIC X(8).                  
+    01 WS-OUTPUT.                              
+       05 TRAINNO PIC X(6).                    
+             05 TRAINNA PIC X(20).                   
+      05 TRAINTY PIC X(1).                    
+      05 TRAIN-DEP PIC X(10).                 
+      05 TRAIN-DEP-TM PIC X(5).               
+      05 TRAIN-ARR PIC X(10).                 
+      05 TRAIN-ARR-TM PIC X(5).               
+      05 TRAIN-FARE PIC X(6).                 
+   01   WS-KSDSCI-EOF PIC X VALUE 'N'.        
+      88 EOF-KSDSCI  VALUE 'Y'.               
+   01   VSAM-RETN.                            
+      05 VSAM-RETN-CODE PIC 99 BINARY.        
+      05 VSAM-FUNC-CODE PIC 99 BINARY.        
+      05 VSAM-FDBK-CODE PIC 99 BINARY.        
+   77   WS-KSDSCI-ST       PIC X(2).          
+   77   ERR-CODE    PIC X(10).                
+     LINKAGE SECTION.                         
+   01 DFHCOMMAREA.                            
+      02 LS-DT-TIME. 
+              03 LS-DATE PIC X(8).                                  
+        03 LS-TIME PIC X(8).                                  
+     PROCEDURE DIVISION.                                      
+   000-MAIN-PARA.                                             
+         MOVE LOW-VALUES TO CUSTSCRO.                         
+         PERFORM 900-DATE-TIME-PARA.                          
+         PERFORM 100-SEND-PARA.                               
+         PERFORM 998-TRANSID-PARA.                            
+         PERFORM 200-RECEIVE-PARA.                            
+         PERFORM 300-OPEN-FILE-PARA.                          
+         PERFORM 400-READ-FILE-PARA UNTIL WS-KSDSCI-EOF = 'Y' 
+         MOVE WS-DATE TO DATEO.                               
+         MOVE WS-TIME TO TIMEO.                               
+         PERFORM 100-SEND-PARA.                               
+         PERFORM 998-TRANSID-PARA.                            
+         PERFORM 800-CLOSE-FILE-PARA.                         
+         PERFORM 999-RETURN-CICS-PARA.                        
+   900-DATE-TIME-PARA.                                        
+   
+           EXEC CICS  ASKTIME ABSTIME(WS-RAWTIME)   
+                           END-EXEC.             
+        EXEC CICS  FORMATTIME ABSTIME(WS-RAWTIME)
+                              DDMMYY(WS-DATE)    
+                              DATESEP            
+                              TIME(WS-TIME)      
+                              TIMESEP            
+                              END-EXEC.          
+        MOVE WS-DATE TO DATEO.                   
+        MOVE WS-TIME TO TIMEO.                   
+  100-SEND-PARA.                                 
+        EXEC CICS                                
+           SEND MAP('CUSTSCR')                   
+                MAPSET('MAPAB39')                
+                ERASE                            
+                FREEKB                           
+        END-EXEC.                                
+  200-RECEIVE-PARA.          
+          EXEC CICS                                        
+           RECEIVE MAP('CUSTSCR')                        
+                   MAPSET('MAPAB39')                     
+        END-EXEC.                                        
+  300-OPEN-FILE-PARA.                                    
+        OPEN INPUT VSAB14.                               
+  400-READ-FILE-PARA.                                    
+        MOVE TRAINNOI TO FS-TRAIN-NUMBER.                
+        EXEC CICS STARTBR FILE('VSAB14')                 
+                          RIDFLD(FS-TRAIN-NUMBER)        
+                          KEYLENGTH(6)                   
+                          RESP(ERR-CODE)                 
+        END-EXEC.                                        
+        MOVE ERR-CODE TO MSGO.                           
+        IF ERR-CODE EQUAL DFHRESP(NORMAL)                
+           PERFORM UNTIL ERR-CODE EQUAL DFHRESP(ENDFILE) 
+              EXEC CICS READNEXT FILE('VSAB14')          
+                                 INTO(WS-OUTPUT)         
+                                                                  RIDFLD(FS-TRAIN-NUMBER)
+                                 RESP(ERR-CODE)         
+              END-EXEC                                  
+           END-PERFORM                                  
+           PERFORM 700-WRITE-PARA                       
+        ELSE                                            
+           PERFORM 600-NOTFOUND-WRITE-PARA              
+        END-IF.                                         
+  600-NOTFOUND-WRITE-PARA.                              
+         MOVE FS-TRAIN-NUMBER TO TRAINNOO.              
+         MOVE 'TRAIN NUMBER NOT FOUND' TO MSGO.         
+  700-WRITE-PARA.                                       
+         MOVE TRAINNO TO TRAINNOO.                      
+         MOVE TRAINNA TO TRAINNAO.                      
+         MOVE TRAINTY TO TRAINTYO.                      
+         MOVE TRAIN-DEP TO DEPTSTNO.                    
+         MOVE TRAIN-DEP-TM TO DEPTTMO.                  
+         MOVE TRAIN-ARR TO ARRSTNO.                     
+                   MOVE TRAIN-ARR-TM TO ARRTMO.                    
+          MOVE TRAIN-FARE TO FAREO.                       
+          MOVE 'TRAIN NUMBER FOUND SUCCESSFULLY' TO MSGO. 
+   800-CLOSE-FILE-PARA.                                   
+         CLOSE VSAB14.                                    
+   998-RETURN-TRANSID-PARA.                               
+         EXEC CICS                                        
+            RETURN TRANSID('AB39')                        
+            COMMAREA(WS-DT-TIME)                          
+         END-EXEC.                                        
+   999-RETURN-CICS-PARA.                                  
+         EXEC CICS                                        
+            RETURN                                        
+         END-EXEC.                                        
+  
+      
+    
