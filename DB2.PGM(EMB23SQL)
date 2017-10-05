@@ -1,0 +1,36 @@
+     IDENTIFICATION DIVISION.        
+     PROGRAM-ID.    EMB23SQL.        
+     ENVIRONMENT DIVISION.           
+     DATA DIVISION.                  
+     WORKING-STORAGE SECTION.        
+  01 WS-SQLCODE PIC -9(9).           
+  01 location-ind  pic s9(4) comp-4. 
+         EXEC SQL                    
+           INCLUDE SQLCA             
+         END-EXEC.                   
+         EXEC SQL                    
+           INCLUDE DEPARTME          
+         END-EXEC.                   
+     PROCEDURE DIVISION.             
+  000-MAIN-PARA.                     
+          MOVE 'a00' TO DEPTNO.                          
+        MOVE 'HYD' TO LOCATION.                        
+        PERFORM 100-QUERY-PARA.                        
+        PERFORM 200-EVALUATE-PARA.                     
+              STOP RUN.                                
+   100-QUERY-PARA.                                     
+           EXEC SQL                                    
+             UPDATE DEPARTMENT                         
+             SET LOCATION = :LOCATION :LOCATION-IND    
+             WHERE DEPTNO = :DEPTNO                    
+           END-EXEC.                                   
+   200-EVALUATE-PARA.                                  
+           MOVE SQLCODE TO WS-SQLCODE.                 
+           EVALUATE SQLCODE                            
+               WHEN 0                                  
+                   DISPLAY "UPDATED"                   
+               WHEN 100                                
+                   DISPLAY 'NO ROWS END ' WS-SQLCODE   
+                                  WHEN OTHER                      
+                   DISPLAY 'ERROR ' WS-SQLCODE 
+           END-EVALUATE.                       
