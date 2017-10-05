@@ -1,0 +1,76 @@
+    IDENTIFICATION DIVISION.            
+    PROGRAM-ID.    EMB24SQL.            
+    ENVIRONMENT DIVISION.               
+    INPUT-OUTPUT SECTION.               
+    FILE-CONTROL.                       
+        SELECT INFILE ASSIGN TO INDD    
+        ORGANIZATION IS SEQUENTIAL      
+        ACCESS IS SEQUENTIAL            
+        FILE STATUS IS WS-INFILE-ST.    
+    DATA DIVISION.                      
+    FILE SECTION.                       
+    FD INFILE                           
+       RECORDING MODE F.                
+         01 INREC.                                
+      05 RS-EMPNO PIC X(6).                
+      05 RS-FIRSTNME PIC X(20).            
+      05 RS-MIDINIT    PIC X(1).           
+      05 RS-LASTNAME PIC X(15).            
+      05             PIC X(38).            
+     WORKING-STORAGE SECTION.              
+  01 WS-INFILE-EOF PIC X VALUE 'N'.        
+     88 EOF-INFILE  VALUE 'Y'.             
+  01 WS-SQLCODE PIC -9(9).                 
+  77 WS-INFILE-ST      PIC X(2).           
+         EXEC SQL                          
+           INCLUDE SQLCA                   
+         END-EXEC.                         
+         EXEC SQL                          
+           INCLUDE EMPLOYEE                
+         END-EXEC.                         
+     PROCEDURE DIVISION.                   
+     
+    000-MAIN-PARA.                                   
+       PERFORM 100-OPEN-EMPCUR-PARA.               
+       IF SQLCODE = 0 AND  WS-INFILE-ST = '00'     
+         PERFORM 200-QUERY-PARA UNTIL EOF-INFILE   
+       ELSE                                        
+         DISPLAY "ERROR IN OPEN"                   
+       END-IF.                                     
+       PERFORM 400-CLOSE-EMPCUR-PARA.              
+             STOP RUN.                             
+  100-OPEN-EMPCUR-PARA.                            
+       OPEN INPUT INFILE.                          
+  200-QUERY-PARA.                                  
+         READ INFILE                               
+            AT END                                 
+              SET EOF-INFILE TO TRUE               
+            NOT AT END                             
+              PERFORM 500-WRITE-PARA               
+         END-READ.                                 
+                   PERFORM 300-EVALUATE-PARA.                   
+   300-EVALUATE-PARA.                                  
+           MOVE SQLCODE TO WS-SQLCODE.                 
+           EVALUATE SQLCODE                            
+               WHEN 0                                  
+                   DISPLAY "WRITTEN"                   
+               WHEN 100                                
+                   DISPLAY 'NO ROWS END ' WS-SQLCODE   
+               WHEN OTHER                              
+                   DISPLAY 'ERROR ' WS-SQLCODE         
+           END-EVALUATE.                               
+   400-CLOSE-EMPCUR-PARA.                              
+          CLOSE INFILE.                                
+   500-WRITE-PARA.                                     
+          MOVE 20 TO FIRSTNME-LEN.                     
+          MOVE 15 TO LASTNAME-LEN.                     
+          MOVE RS-EMPNO TO EMPNO.                      
+          MOVE RS-FIRSTNME TO FIRSTNME-TEXT.           
+                  MOVE RS-MIDINIT  TO MIDINIT.               
+        MOVE RS-LASTNAME TO LASTNAME-TEXT.         
+             EXEC SQL                              
+                INSERT INTO EMPLOYEE               
+                (EMPNO,FIRSTNME,MIDINIT,LASTNAME)  
+                VALUES(:EMPNO,:FIRSTNME,           
+                     :MIDINIT,:LASTNAME)           
+             END-EXEC.                             
