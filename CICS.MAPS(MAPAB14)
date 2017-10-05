@@ -1,0 +1,40 @@
+MAPAB14 DFHMSD TYPE=&SYSPARM,MODE=INOUT,TERM=ALL,                      X
+               LANG=COBOL,TIOAPFX=YES,CTRL=(FREEKB),DSATTS=COLOR,      X
+               MAPATTS=COLOR                                            
+ORDERM   DFHMDI SIZE=(24,80),LINE=1,COLUMN=1                            
+         DFHMDF POS=(1,1),LENGTH=5,INITIAL='DATE:',ATTRB=PROT,COLOR=RED 
+DATE     DFHMDF POS=(1,7),LENGTH=8,ATTRB=ASKIP                          
+         DFHMDF POS=(1,18),LENGTH=1,ATTRB=ASKIP                         
+         DFHMDF POS=(2,1),LENGTH=5,INITIAL='TIME:',ATTRB=PROT,COLOR=RED 
+TIME     DFHMDF POS=(2,7),LENGTH=8,ATTRB=ASKIP                          
+         DFHMDF POS=(3,34),LENGTH=18,INITIAL='CALCULATION SCREEN',     X
+               ATTRB=PROT,COLOR=NEUTRAL                                 
+         DFHMDF POS=(5,36),LENGTH=10,INITIAL='1.ADDITION',             X
+               ATTRB=PROT,COLOR=PINK                                    
+         DFHMDF POS=(6,36),LENGTH=13,INITIAL='2.SUBTRACTION',          X
+               ATTRB=PROT,COLOR=PINK                                    
+                         DFHMDF POS=(7,36),LENGTH=16,INITIAL='3.MULTIPLICATION',       X
+                ATTRB=PROT,COLOR=PINK                                    
+          DFHMDF POS=(8,36),LENGTH=10,INITIAL='4.DIVISION',             X
+                ATTRB=PROT,COLOR=PINK                                    
+          DFHMDF POS=(10,1),LENGTH=22,INITIAL='ENTER THE MENU OPTION:', X
+                ATTRB=ASKIP,COLOR=BLUE                                   
+ MENU     DFHMDF POS=(10,24),LENGTH=1,INITIAL='_',ATTRB=(UNPROT,IC)      
+          DFHMDF POS=(10,26),LENGTH=1,ATTRB=ASKIP                        
+          DFHMDF POS=(11,1),LENGTH=20,INITIAL='KEY IN THE 2 VALUES:',   X
+                ATTRB=ASKIP,COLOR=NEUTRAL                                
+ ONE      DFHMDF POS=(11,22),LENGTH=2,ATTRB=(UNPROT,NUM),INITIAL='__',  X
+                PICIN='99',PICOUT='99'                                   
+          DFHMDF POS=(11,25),LENGTH=1,ATTRB=ASKIP                        
+          DFHMDF POS=(11,27),LENGTH=3,INITIAL='AND',ATTRB=ASKIP          
+ TWO      DFHMDF POS=(11,31),LENGTH=2,ATTRB=(UNPROT,NUM),INITIAL='__',  X
+                PICIN='99',PICOUT='99'                                   
+          DFHMDF POS=(11,34),LENGTH=1,ATTRB=ASKIP                        
+          DFHMDF POS=(14,1),LENGTH=8,INITIAL='MESSAGE:',ATTRB=PROT       
+           MSG      DFHMDF POS=(14,10),LENGTH=75,ATTRB=PROT                        
+          DFHMDF POS=(16,1),LENGTH=7,INITIAL='F3-EXIT',ATTRB=PROT        
+        DFHMDF POS=(16,10),LENGTH=24,INITIAL='ENTER-FURTHER PROCESSING',X
+                ATTRB=PROT                                               
+          DFHMDF POS=(16,36),LENGTH=10,INITIAL='F5-REFRESH',ATTRB=PROT   
+          DFHMSD TYPE=FINAL                                              
+          END                                                            
