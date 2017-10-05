@@ -1,0 +1,23 @@
+    IDENTIFICATION DIVISION.                               
+    PROGRAM-ID.    SQUCUBE.                                
+    AUTHOR.        MANASA.                                 
+    INSTALLATION.  IBM E&T.                                
+    DATE-WRITTEN.  8/17/17.                                
+    DATE-COMPILED.                                         
+    SECURITY.      NONE.                                   
+ ******************************************************    
+ * MY FIRST PROGRAM                                        
+ ******************************************************    
+    ENVIRONMENT DIVISION.                                  
+    DATA DIVISION.                                         
+    WORKING-STORAGE SECTION.                               
+  77 WS-NUM     PIC 9(1) VALUE 9.                          
+  77 WS-SQUARE  PIC 9(2).                                  
+    77 WS-CUBE    PIC 9(4).                              
+    PROCEDURE DIVISION.                                
+        COMPUTE WS-SQUARE = WS-NUM * WS-NUM.           
+        COMPUTE WS-CUBE   = WS-NUM * WS-NUM * WS-NUM.  
+        DISPLAY WS-NUM.                                
+        DISPLAY WS-SQUARE.                             
+        DISPLAY WS-CUBE.                               
+               STOP RUN.                               
