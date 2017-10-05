@@ -1,0 +1,19 @@
+     IDENTIFICATION DIVISION.                            
+     PROGRAM-ID.    CONVERTP.                            
+     AUTHOR.        MANASA.                              
+     INSTALLATION.  IBM E&T.                             
+     DATE-WRITTEN.  8/17/17.                             
+     DATE-COMPILED.                                      
+     SECURITY.      NONE.                                
+  ****************************************************** 
+  * MY INSPECT CONVERT PROGRAM                           
+  ****************************************************** 
+     ENVIRONMENT DIVISION.                               
+     DATA DIVISION.                                      
+     WORKING-STORAGE SECTION.                            
+   77 WS-STRING  PIC X(30) VALUE '12AB2ABCDE123A'.       
+   77 WS-CNT    PIC 9(2).                                
+       PROCEDURE DIVISION.                           
+      INSPECT WS-STRING CONVERTING  'AB' TO 'XY'. 
+      DISPLAY WS-STRING.                          
+      STOP RUN.                                   
