@@ -1,0 +1,118 @@
+     IDENTIFICATION DIVISION.                             
+     PROGRAM-ID.    ESDSWPGM.                             
+     AUTHOR.        MANASA.                               
+     INSTALLATION.  IBM E&T.                              
+     DATE-WRITTEN.  8/17/17.                              
+     DATE-COMPILED.                                       
+     SECURITY.      NONE.                                 
+  ******************************************************  
+  * READING STUDENT DETAILS FROM A FILE PROGRAM           
+  ******************************************************  
+     ENVIRONMENT DIVISION.                                
+     INPUT-OUTPUT SECTION.                                
+     FILE-CONTROL.                                        
+          SELECT ESDSST ASSIGN TO AS-ESDSDD               
+          ORGANIZATION IS SEQUENTIAL                      
+                   ACCESS IS SEQUENTIAL                   
+         FILE STATUS IS WS-ESDSST-ST VSAM-RETN. 
+                                                
+         SELECT STUDF1 ASSIGN TO STUDD1         
+         ORGANIZATION IS SEQUENTIAL             
+         ACCESS IS SEQUENTIAL                   
+         FILE STATUS IS WS-STUDF1-ST .          
+                                                
+    DATA DIVISION.                              
+    FILE SECTION.                               
+    FD ESDSST.                                  
+  01 ESDSSTRE.                                  
+      05 FS-STUDNO    PIC X(1).                 
+      05 FS-STUDNAME  PIC X(6).                 
+      05 FS-ENGLISH   PIC 9(3).                 
+      05 FS-SOCIAL    PIC 9(3).                 
+      05 FS-MATHS     PIC 9(3).                 
+      05 FS-SCIENCE   PIC 9(3).                 
+            05 FS-TELUGU    PIC 9(3).       
+      05              PIC X(58).      
+    FD STUDF1                         
+         RECORDING MODE IS F.         
+  01 STUD1REC.                        
+      05 RS-STUDNO    PIC X(1).       
+      05              PIC X(2).       
+      05 RS-STUDNAME  PIC X(6).       
+      05              PIC X(2).       
+      05 RS-ENGLISH   PIC 9(3).       
+      05              PIC X(2).       
+      05 RS-SOCIAL    PIC 9(3).       
+      05              PIC X(2).       
+      05 RS-MATHS     PIC 9(3).       
+      05              PIC X(2).       
+      05 RS-SCIENCE   PIC 9(3).       
+      05              PIC X(2).       
+      05 RS-TELUGU    PIC 9(3).       
+             05              PIC X(2).           
+       05 RS-TOTAL     PIC 9(3).           
+       05              PIC X(2).           
+       05 RS-AVG       PIC 9(3).           
+       05              PIC X(36).          
+     WORKING-STORAGE SECTION.              
+   01   WS-ESDSST-EOF PIC X VALUE 'N'.     
+      88 EOF-ESDSST  VALUE 'Y'.            
+   01   VSAM-RETN.                         
+      05 VSAM-RETN-CODE PIC 99 BINARY.     
+      05 VSAM-FUNC-CODE PIC 99 BINARY.     
+      05 VSAM-FDBK-CODE PIC 99 BINARY.     
+   77   WS-STUDF1-ST      PIC X(2).        
+   77   WS-ESDSST-ST       PIC X(2).       
+   77   WS-TOTAL            PIC 9(4).      
+   77   WS-AVG              PIC 9(3)V9(2). 
+     PROCEDURE DIVISION.                   
+     000-MAIN-PARA.                        
+            PERFORM 100-OPEN-FILE-PARA.                           
+       IF VSAM-RETN-CODE = 00 AND WS-STUDF1-ST = '00'        
+         PERFORM 200-READ-FILE-PARA UNTIL WS-ESDSST-EOF = 'Y'
+       ELSE                                                  
+         DISPLAY 'ERROR IN OPEN '  WS-STUDF1-ST              
+       END-IF.                                               
+       PERFORM 300-CLOSE-FILE-PARA.                          
+       STOP RUN.                                             
+     100-OPEN-FILE-PARA.                                     
+         OPEN INPUT ESDSST.                                  
+         OPEN OUTPUT STUDF1.                                 
+     200-READ-FILE-PARA.                                     
+         READ ESDSST                                         
+            AT END                                           
+               SET EOF-ESDSST TO TRUE                        
+            NOT AT END                                       
+               PERFORM 210-CALC-PARA                         
+               PERFORM 211-WRITE-PARA                        
+                      END-READ.                                               
+                                                               
+   300-CLOSE-FILE-PARA.                                        
+       CLOSE ESDSST.                                           
+       CLOSE STUDF1.                                           
+   210-CALC-PARA.                                              
+         COMPUTE WS-TOTAL = FS-MATHS + FS-SCIENCE + FS-ENGLISH 
+                              +  FS-TELUGU + FS-SOCIAL.        
+         COMPUTE WS-AVG = WS-TOTAL / 5.                        
+   211-WRITE-PARA.                                             
+         DISPLAY "FS-STUDNO:  "  FS-STUDNO.                    
+         DISPLAY "FS-STUDNAME:  "  FS-STUDNAME.                
+         DISPLAY "FS-MATHS:  "  FS-MATHS.                      
+         DISPLAY "FS-SCIENCE:  "  FS-SCIENCE.                  
+         DISPLAY "FS-SOCIAL:  "  FS-SOCIAL.                    
+         DISPLAY "FS-ENGLISH:  "  FS-ENGLISH.                  
+         DISPLAY "FS-TELUGU:  "  FS-TELUGU.                    
+         DISPLAY "WS-TOTAL:  "  WS-TOTAL.                      
+                  DISPLAY "WS-AVERAGE: " WS-AVG.     
+         DISPLAY "                   ".     
+         MOVE FS-STUDNO TO RS-STUDNO.       
+         MOVE FS-STUDNAME TO RS-STUDNAME.   
+         MOVE FS-MATHS TO RS-MATHS.         
+         MOVE FS-SCIENCE TO RS-SCIENCE.     
+         MOVE FS-SOCIAL TO RS-SOCIAL.       
+         MOVE FS-ENGLISH TO RS-ENGLISH.     
+         MOVE FS-TELUGU TO RS-TELUGU.       
+         MOVE WS-TOTAL TO RS-TOTAL.         
+         MOVE WS-AVG TO RS-AVG.             
+         WRITE STUD1REC.                    
+         DISPLAY "WRITTEN TO THE FILE".     
