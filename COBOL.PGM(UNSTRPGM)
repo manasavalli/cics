@@ -1,0 +1,27 @@
+     IDENTIFICATION DIVISION.                             
+     PROGRAM-ID.    UNSTRPGM.                             
+     AUTHOR.        MANASA.                               
+     INSTALLATION.  IBM E&T.                              
+     DATE-WRITTEN.  8/17/17.                              
+     DATE-COMPILED.                                       
+     SECURITY.      NONE.                                 
+  ******************************************************  
+  * MY CONCATENTION PROGRAM                               
+  ******************************************************  
+     ENVIRONMENT DIVISION.                                
+     DATA DIVISION.                                       
+     WORKING-STORAGE SECTION.                             
+   01 ADDRESS1 PIC X(84) VALUE                            
+        "IBM DAYTON;33 W.FIRST ST.;DAYTON, OH 45402\DAY". 
+          01 ADDRESS2.                                                     
+    04 LINE1 PIC X(80).                                            
+    04 LINE2 PIC X(80).                                            
+    04 LINE3 PIC X(80).                                            
+    PROCEDURE DIVISION.                                            
+         UNSTRING ADDRESS1 DELIMITED BY ';' OR '\' INTO LINE1 LINE2
+             LINE3                                                 
+         END-UNSTRING.                                             
+        DISPLAY LINE1.                                             
+        DISPLAY LINE2.                                             
+        DISPLAY LINE3.                                             
+            STOP RUN.                                              
