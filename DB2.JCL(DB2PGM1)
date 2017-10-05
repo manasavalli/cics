@@ -1,0 +1,37 @@
+   IDENTIFICATION DIVISION.                                       
+   PROGRAM-ID.    DB2PGM1.                                        
+  ****************************************************************
+  * PROGRAM NAME : DB2PGM1.                                       
+  * FUNCTIONALITY:                                                
+  * DEVELOPER    :                                                
+  * DATE         : DD/MM/CCYY                                     
+  * INPUT FILE   : NONE                                           
+  * OUTPUT FILE  : NONE                                           
+  ****************************************************************
+   AUTHOR.                                                        
+   DATE-WRITTEN.                                                  
+   ENVIRONMENT DIVISION.                                          
+   INPUT-OUTPUT SECTION.                                          
+   DATA DIVISION.                                                 
+                                                                  
+   WORKING-STORAGE SECTION.                                       
+                                                        
+        EXEC SQL                                     
+          INCLUDE SQLCA                              
+        END-EXEC.                                    
+                                                     
+        EXEC SQL                                     
+          INCLUDE EMPLOYEE                           
+        END-EXEC.                                    
+                                                     
+    01  WS-DISPLAY-SQLCODE   PIC -Z(9).              
+                                                     
+    PROCEDURE DIVISION.                              
+        EXEC SQL                                     
+          SELECT EMPNO                               
+            INTO :EMPNO                              
+            FROM EMPLOYEE_TRNG001A                   
+        END-EXEC.                                    
+        MOVE SQLCODE TO WS-DISPLAY-SQLCODE.          
+            DISPLAY "SQLCODE : " WS-DISPLAY-SQLCODE.     
+    STOP RUN.                                    
