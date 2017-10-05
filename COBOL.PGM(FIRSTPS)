@@ -1,0 +1,24 @@
+      IDENTIFICATION DIVISION.                                 
+      PROGRAM-ID.    FIRSTPS.                                  
+      AUTHOR.        MANASA.                                   
+      INSTALLATION.  IBM E&T.                                  
+      DATE-WRITTEN.  8/17/17.                                  
+      DATE-COMPILED.                                           
+      SECURITY.      NONE.                                     
+   ******************************************************      
+   * MY FIRST PROGRAM                                          
+   ******************************************************      
+      ENVIRONMENT DIVISION.                                    
+      DATA DIVISION.                                           
+      WORKING-STORAGE SECTION.                                 
+    77  ANY-DATA-ITEM USAGE                           DISPLAY  
+                PIC   X(20).                                   
+                   77  ITEM-CONTINUED    PIC X(26)                      VALUE "ABCDE
+  -       "FGHIJKLMNOPQRSTUVWXYZ".                                  
+   77  ITEM-WITH-BLANKS  PIC X(40)                   VALUE "01 02   
+  -    "03 04 05 06 07 08 09 10 ".                                  
+     PROCEDURE DIVISION.                                            
+         DISPLAY ANY-DATA-ITEM.                                     
+         DISPLAY ITEM-CONTINUED.                                    
+         DISPLAY ITEM-WITH-BLANKS.                                  
+                STOP RUN.                                           
