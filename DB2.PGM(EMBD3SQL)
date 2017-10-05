@@ -1,0 +1,35 @@
+     IDENTIFICATION DIVISION.        
+     PROGRAM-ID.    EMBD3SQL.        
+     ENVIRONMENT DIVISION.           
+     DATA DIVISION.                  
+     WORKING-STORAGE SECTION.        
+  01 WS-SQLCODE PIC -9(9).           
+  01 WS-WORKDEPT PIC X(3).           
+         EXEC SQL                    
+           INCLUDE SQLCA             
+         END-EXEC.                   
+         EXEC SQL                    
+           INCLUDE EMPLOYEE          
+         END-EXEC.                   
+     PROCEDURE DIVISION.             
+  000-MAIN-PARA.                     
+          PERFORM 100-QUERY-PARA.                        
+        PERFORM 200-EVALUATE-PARA.                     
+              STOP RUN.                                
+   100-QUERY-PARA.                                     
+           MOVE 'a00' tO WS-WORKDEPT.                  
+           EXEC SQL                                    
+             UPDATE EMPLOYEE                           
+             SET SALARY = 30000                        
+             WHERE  WORKDEPT = :WS-WORKDEPT            
+           END-EXEC.                                   
+   200-EVALUATE-PARA.                                  
+           MOVE SQLCODE TO WS-SQLCODE.                 
+           EVALUATE SQLCODE                            
+               WHEN 0                                  
+                   DISPLAY "UPDATED"                   
+               WHEN 100                                
+                   DISPLAY 'NO ROWS END ' WS-SQLCODE   
+               WHEN OTHER                              
+                                  DISPLAY 'ERROR ' WS-SQLCODE   
+           END-EVALUATE.                         
