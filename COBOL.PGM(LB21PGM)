@@ -1,0 +1,25 @@
+     IDENTIFICATION DIVISION.                             
+     PROGRAM-ID.    LB21PGM.                              
+     AUTHOR.        MANASA.                               
+     INSTALLATION.  IBM E&T.                              
+     DATE-WRITTEN.  8/17/17.                              
+     DATE-COMPILED.                                       
+     SECURITY.      NONE.                                 
+  ******************************************************  
+  * MY FIRST PROGRAM                                      
+  ******************************************************  
+     ENVIRONMENT DIVISION.                                
+     DATA DIVISION.                                       
+     WORKING-STORAGE SECTION.                             
+   77 WS-NAME PIC X(20).                                  
+   77 WS-ROLLNO  PIC X(20).                               
+       77 WS-CNT  PIC 9(1).                       
+      PROCEDURE DIVISION.                      
+          ACCEPT  WS-CNT.                      
+          PERFORM 100-INPUT-PARA WS-CNT TIMES. 
+            STOP RUN.                          
+    100-INPUT-PARA.                            
+          ACCEPT  WS-ROLLNO.                   
+          ACCEPT  WS-NAME.                     
+          DISPLAY WS-ROLLNO.                   
+          DISPLAY WS-NAME.                     
