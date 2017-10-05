@@ -1,0 +1,29 @@
+     IDENTIFICATION DIVISION.                            
+     PROGRAM-ID.    CORREPGM.                            
+     AUTHOR.        MANASA.                              
+     INSTALLATION.  IBM E&T.                             
+     DATE-WRITTEN.  8/17/17.                             
+     DATE-COMPILED.                                      
+     SECURITY.      NONE.                                
+  ****************************************************** 
+  * MY SECOND PROGRAM                                    
+  ****************************************************** 
+     ENVIRONMENT DIVISION.                               
+     DATA DIVISION.                                      
+     WORKING-STORAGE SECTION.                            
+   01   STRUCT-1.                                        
+      03 FIELD-A  PIC 9(9) VALUE 123456789.              
+            03 FIELD-B  PIC X(5) VALUE "ABCDE".          
+      03 FIELD-C  PIC 9(4)V99 VALUE 1234.56.       
+      03 FIELD-D  PIC 9(8)V99 VALUE 123456.        
+   01   STRUCT-2.                                  
+      03 FIELD-C  PIC Z(4).99.                     
+      03 FILLER   PIC XXX.                         
+      03 FIELD-B  PIC X(5).                        
+      03 FILLER   PIC XXX.                         
+      03 FIELD-A  PIC Z(9).                        
+      03 FILLER   PIC XXX.                         
+     PROCEDURE DIVISION.                           
+           MOVE CORRESPONDING STRUCT-1 TO STRUCT-2.
+           DISPLAY STRUCT-2.                       
+           STOP  RUN.                              
