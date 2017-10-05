@@ -1,0 +1,19 @@
+ MAPAB64  DFHMSD TYPE=&SYSPARM,MODE=INOUT,TERM=ALL,                     X
+                LANG=COBOL,TIOAPFX=YES,CTRL=(FREEKB),DSATTS=COLOR,      X
+                MAPATTS=COLOR                                            
+ ORDRSCR  DFHMDI SIZE=(24,80),LINE=1,COLUMN=1                            
+          DFHMDF POS=(1,1),LENGTH=17,INITIAL='AUTHOR LAST NAME:',       X
+                ATTRB=ASKIP,COLOR=BLUE                                   
+ LASTNAME DFHMDF POS=(1,19),LENGTH=10,ATTRB=(UNPROT,IC)                  
+          DFHMDF POS=(1,30),LENGTH=1,ATTRB=ASKIP                         
+          DFHMDF POS=(2,1),LENGTH=6,INITIAL='TITLE:',ATTRB=ASKIP,       X
+                COLOR=RED                                                
+ TITLE    DFHMDF POS=(2,8),LENGTH=10,ATTRB=UNPROT                        
+          DFHMDF POS=(2,19),LENGTH=1,ATTRB=PROT                          
+          DFHMDF POS=(6,1),LENGTH=7,INITIAL='F3=EXIT',ATTRB=PROT         
+          DFHMDF POS=(6,12),LENGTH=10,INITIAL='F9=REFRESH',ATTRB=PROT    
+          DFHMDF POS=(6,26),LENGTH=10,INITIAL='F12=RETURN',ATTRB=PROT    
+          MSG      DFHMDF POS=(24,1),LENGTH=75,ATTRB=ASKIP    
+         DFHMSD TYPE=FINAL                          
+         END                                        
+          
