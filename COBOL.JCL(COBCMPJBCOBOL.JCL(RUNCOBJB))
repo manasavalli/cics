@@ -1,0 +1,4 @@
+//TRNG139R JOB CLASS=A,MSGCLASS=H,NOTIFY=&SYSUID,TIME=(0,1) 
+//JS0010      EXEC  PGM=TEST                                
+//STEPLIB      DD DSN=TRNG139.COBOL.LOAD,DISP=SHR           
+//SYSPRINT     DD SYSOUT=*                                  
