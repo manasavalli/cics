@@ -1,0 +1,76 @@
+     IDENTIFICATION DIVISION.                             
+     PROGRAM-ID.    FSTUDPGM.                             
+     AUTHOR.        MANASA.                               
+     INSTALLATION.  IBM E&T.                              
+     DATE-WRITTEN.  8/17/17.                              
+     DATE-COMPILED.                                       
+     SECURITY.      NONE.                                 
+  ******************************************************  
+  * READING STUDENT DETAILS FROM A FILE PROGRAM           
+  ******************************************************  
+     ENVIRONMENT DIVISION.                                
+     INPUT-OUTPUT SECTION.                                
+     FILE-CONTROL.                                        
+          SELECT STUDFILE ASSIGN TO STUDD                 
+          ORGANIZATION IS SEQUENTIAL                      
+                    ACCESS IS SEQUENTIAL                  
+          FILE STATUS IS WS-STUDFILE-ST.        
+     DATA DIVISION.                             
+     FILE SECTION.                              
+     FD STUDFILE                                
+          RECORDING MODE IS F.                  
+   01 STUDREC.                                  
+       05 FS-STUDNO    PIC X.                   
+       05 FS-STUDNAME  PIC X(6).                
+       05 FS-ENGLISH   PIC 9(3).                
+       05 FS-SOCIAL    PIC 9(3).                
+       05 FS-MATHS     PIC 9(3).                
+       05 FS-SCIENCE   PIC 9(3).                
+       05 FS-TELUGU    PIC 9(3).                
+       05              PIC X(58).               
+     WORKING-STORAGE SECTION.                   
+   01   WS-STUDFILE-EOF PIC X VALUE 'N'.        
+      88 EOF-STUDFILE  VALUE 'Y'.               
+         77   WS-STUDFILE-ST      PIC X(2).                          
+   77   WS-TOTAL            PIC 9(4).                          
+   77   WS-AVG              PIC 9(3)V9(2).                     
+     PROCEDURE DIVISION.                                       
+     000-MAIN-PARA.                                            
+       PERFORM 100-OPEN-FILE-PARA.                             
+       IF WS-STUDFILE-ST = '00'                                
+         PERFORM 200-READ-FILE-PARA UNTIL WS-STUDFILE-EOF = 'Y'
+       ELSE                                                    
+         DISPLAY 'ERROR IN OPEN '  WS-STUDFILE-ST              
+       END-IF.                                                 
+       PERFORM 300-CLOSE-FILE-PARA.                            
+       STOP RUN.                                               
+     100-OPEN-FILE-PARA.                                       
+         OPEN INPUT STUDFILE.                                  
+                                                               
+     200-READ-FILE-PARA.                                       
+         READ STUDFILE                                         
+                    AT END                                               
+              SET EOF-STUDFILE TO TRUE                          
+           NOT AT END                                           
+              PERFORM 210-CALC-PARA                             
+        END-READ.                                               
+                                                                
+    300-CLOSE-FILE-PARA.                                        
+        CLOSE STUDFILE.                                         
+                                                                
+    210-CALC-PARA.                                              
+          COMPUTE WS-TOTAL = FS-MATHS + FS-SCIENCE + FS-ENGLISH 
+                               +  FS-TELUGU + FS-SOCIAL.        
+          COMPUTE WS-AVG = WS-TOTAL / 5.                        
+          PERFORM 211-DISPLAY-PARA.                             
+    211-DISPLAY-PARA.                                           
+          DISPLAY "FS-STUDNO:  "  FS-STUDNO.                    
+          DISPLAY "FS-STUDNAME:  "  FS-STUDNAME.                
+          DISPLAY "FS-MATHS:  "  FS-MATHS.                      
+                    DISPLAY "FS-SCIENCE:  "  FS-SCIENCE.     
+          DISPLAY "FS-SOCIAL:  "  FS-SOCIAL.       
+          DISPLAY "FS-ENGLISH:  "  FS-ENGLISH.     
+          DISPLAY "FS-TELUGU:  "  FS-TELUGU.       
+          DISPLAY "WS-TOTAL:  "  WS-TOTAL.         
+          DISPLAY "WS-AVERAGE: " WS-AVG.           
+          DISPLAY "                   ".           
