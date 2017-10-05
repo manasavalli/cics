@@ -1,0 +1,23 @@
+    IDENTIFICATION DIVISION.                              
+    PROGRAM-ID.    WELCOME.                               
+    AUTHOR.        MANASA.                                
+    INSTALLATION.  IBM E&T.                               
+    DATE-WRITTEN.  8/17/17.                               
+    DATE-COMPILED.                                        
+    SECURITY.      NONE.                                  
+ ******************************************************   
+ * MY FIRST PROGRAM                                       
+ ******************************************************   
+    ENVIRONMENT DIVISION.                                 
+    DATA DIVISION.                                        
+    WORKING-STORAGE SECTION.                              
+  01 WS-VARS.                                             
+     05 WS-A  PIC A(20)           VALUE "WELCOME TO IBM". 
+          05 WS-B  PIC A(20)                     VALUE "MANASA". 
+  77 WS-VAR PIC A(30) VALUE "WELCOME TO IBM MANASA".        
+    PROCEDURE DIVISION.                                     
+        DISPLAY WS-VARS.                                    
+        DISPLAY WS-A.                                       
+        DISPLAY WS-B.                                       
+        DISPLAY WS-VAR.                                     
+               STOP RUN.                                    
