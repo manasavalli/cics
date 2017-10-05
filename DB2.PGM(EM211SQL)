@@ -1,0 +1,42 @@
+    IDENTIFICATION DIVISION.             
+    PROGRAM-ID.    EM211SQL.             
+    ENVIRONMENT DIVISION.                
+    DATA DIVISION.                       
+    WORKING-STORAGE SECTION.             
+ 01 WS-SQLCODE PIC -9(9).                
+        EXEC SQL                         
+          INCLUDE SQLCA                  
+        END-EXEC.                        
+        EXEC SQL                         
+          INCLUDE EMPLOYEE               
+        END-EXEC.                        
+    PROCEDURE DIVISION.                  
+ 000-MAIN-PARA.                          
+      PERFORM 100-QUERY-PARA.            
+              PERFORM 200-EVALUATE-PARA.              
+              STOP RUN.                         
+   100-QUERY-PARA.                              
+        MOVE '130' TO EMPNO.                    
+        MOVE 20 TO FIRSTNME-LEN.                
+        MOVE 'DOLORES' TO FIRSTNME-TEXT.        
+        MOVE 'M' TO MIDINIT.                    
+        MOVE 15 TO LASTNAME-LEN.                
+        MOVE 'QUINTANA' TO LASTNAME-TEXT.       
+           EXEC SQL                             
+             INSERT INTO EMPLOYEE               
+             (EMPNO,FIRSTNME,MIDINIT,LASTNAME)  
+             VALUES(:EMPNO,:FIRSTNME,           
+                :MIDINIT,:LASTNAME)             
+           END-EXEC.                            
+   200-EVALUATE-PARA.                           
+           MOVE SQLCODE TO WS-SQLCODE.          
+           EVALUATE SQLCODE                     
+                        WHEN 0                                    
+                 DISPLAY "INSERTED"  WS-SQLCODE        
+                 DISPLAY EMPNO                         
+                 DISPLAY EDLEVEL                       
+             WHEN 100                                  
+                 DISPLAY 'NO ROWS END ' WS-SQLCODE     
+             WHEN OTHER                                
+                 DISPLAY 'ERROR ' WS-SQLCODE           
+         END-EVALUATE.                                 
