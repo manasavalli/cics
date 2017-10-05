@@ -1,0 +1,144 @@
+    IDENTIFICATION DIVISION.         
+    PROGRAM-ID.    PROGAB39.         
+    ENVIRONMENT DIVISION.            
+    DATA DIVISION.                   
+    WORKING-STORAGE SECTION.         
+      COPY MAPAB39.                  
+      COPY DFHAID.                   
+  01 WS-TR-REC.                      
+     05 WS-TR-NO PIC X(6).           
+     05 WS-TR-NAME PIC X(20).        
+     05 WS-TR-TYPE PIC X(1).         
+     05 WS-DEP-STN PIC X(10).        
+     05 WS-DEP-TM  PIC X(5).         
+     05 WS-ARR-STN PIC X(10).        
+     05 WS-ARR-TM  PIC X(5).         
+            05 WS-FARE    PIC X(6).                         
+       05 WS-MSG     PIC X(25).                        
+       05            PIC X(12).                        
+    01 WS-RAWTIME PIC S9(15) COMP-3.                   
+    01 WS-EXIT-MSG PIC X(17) VALUE 'EXITING FROM MENU'.
+    01 ERR-CODE  PIC S9(8) COMP.                       
+    01 WS-DT-TIME.                                     
+       03 WS-DATE   PIC X(8).                          
+       03 WS-TIME   PIC X(8).                          
+      LINKAGE SECTION.                                 
+    01 DFHCOMMAREA.                                    
+       02 LS-DT-TIME.                                  
+         03 LS-DATE PIC X(8).                          
+         03 LS-TIME PIC X(8).                          
+      PROCEDURE DIVISION.                              
+    000-MAIN-PARA.                                     
+          MOVE LOW-VALUES TO CUSTSCRI.                 
+          IF EIBCALEN = 0                              
+                       PERFORM 400-DATE-TIME-PARA               
+             PERFORM 100-SEND-PARA                    
+             PERFORM 998-RETURN-TRANSID-PARA          
+           ELSE                                       
+             PERFORM 200-RECEIVE-PARA                 
+             PERFORM 100-SEND-PARA                    
+             PERFORM 998-RETURN-TRANSID-PARA          
+           END-IF.                                    
+     400-DATE-TIME-PARA.                              
+           EXEC CICS  ASKTIME ABSTIME(WS-RAWTIME)     
+                              END-EXEC.               
+           EXEC CICS  FORMATTIME ABSTIME(WS-RAWTIME)  
+                                 DDMMYY(WS-DATE)      
+                                 DATESEP              
+                                 TIME(WS-TIME)        
+                                 TIMESEP              
+                                 END-EXEC.            
+           MOVE WS-DATE TO DATEO.                     
+                     MOVE WS-TIME TO TIMEO.            
+    100-SEND-PARA.                          
+          MOVE WS-DATE TO DATEO.            
+          MOVE WS-TIME TO TIMEO.            
+          EXEC CICS                         
+             SEND MAP('CUSTSCR')            
+                  MAPSET('MAPAB39')         
+                  ERASE                     
+                  FREEKB                    
+          END-EXEC.                         
+    200-RECEIVE-PARA.                       
+          MOVE LS-DATE TO WS-DATE.          
+          MOVE LS-TIME TO WS-TIME.          
+          EXEC CICS                         
+             RECEIVE MAP('CUSTSCR')         
+                     MAPSET('MAPAB39')      
+                     RESP(ERR-CODE)         
+          END-EXEC.                         
+                    EVALUATE ERR-CODE                                  
+              WHEN DFHRESP(NORMAL)                           
+                     PERFORM 310-KEY-CHECK-PARA              
+              WHEN DFHRESP(MAPFAIL)                          
+                     IF EIBAID = DFHPF3                      
+                        PERFORM 997-SEND-EXIT-MSG-PARA       
+                        PERFORM 999-RETURN-CICS-PARA         
+                     ELSE                                    
+                        MOVE 'ENTER THE TRAIN NUMBER' TO MSGO
+                     END-IF                                  
+              WHEN OTHER                                     
+                     MOVE 'OTHER' TO MSGO                    
+          END-EVALUATE.                                      
+    310-KEY-CHECK-PARA.                                      
+          EVALUATE(EIBAID)                                   
+              WHEN DFHPF3                                    
+                  PERFORM 997-SEND-EXIT-MSG-PARA             
+                  PERFORM 999-RETURN-CICS-PARA               
+                              WHEN DFHPF5                                
+                MOVE LOW-VALUES TO CUSTSCRO            
+                MOVE 'SCREEN IS REFRESHED' TO MSGO     
+            WHEN DFHENTER                              
+                PERFORM 330-LINK-PGM-PARA              
+            WHEN OTHER                                 
+                MOVE 'PRESS F3/F5/ENTER' TO MSGO       
+        END-EVALUATE.                                  
+  320-VALUE-CHECK-PARA.                                
+        EVALUATE TRAINNOL                              
+            WHEN 0                                     
+                MOVE 'ENTER TRAINNO VALUE' TO MSGO     
+            WHEN OTHER                                 
+                CONTINUE                               
+        END-EVALUATE.                                  
+  330-LINK-PGM-PARA.                                   
+        INITIALIZE WS-TR-REC.                          
+        MOVE TRAINNOI TO WS-TR-NO.                     
+                EXEC CICS LINK PROGRAM('PROGAB64')          
+                  COMMAREA(WS-TR-REC)               
+                  LENGTH(LENGTH OF WS-TR-REC)       
+                  NOHANDLE                          
+        END-EXEC.                                   
+        IF EIBRESP = DFHRESP(NORMAL)                
+           EVALUATE(WS-MSG)                         
+               WHEN 'TRAIN NUMBER FOUND'            
+                MOVE WS-TR-NAME TO TRAINNAO         
+                MOVE WS-TR-TYPE TO TRAINTYO         
+                MOVE WS-DEP-STN TO DEPTSTNO         
+                MOVE WS-DEP-TM  TO DEPTTMO          
+                MOVE WS-ARR-STN TO ARRSTNO          
+                MOVE WS-ARR-TM  TO ARRTMO           
+                MOVE WS-FARE    TO FAREO            
+                MOVE WS-MSG TO MSGO                 
+               WHEN OTHER                           
+                MOVE WS-MSG TO MSGO                 
+                            END-EVALUATE                         
+         ELSE                                    
+            MOVE 'ERROR IN LINK PROGRAM' TO MSGO 
+         END-IF.                                 
+   997-SEND-EXIT-MSG-PARA.                       
+         EXEC CICS                               
+            SEND TEXT                            
+            FROM(WS-EXIT-MSG)                    
+            LENGTH(LENGTH OF WS-EXIT-MSG)        
+            ERASE                                
+            FREEKB                               
+         END-EXEC.                               
+   998-RETURN-TRANSID-PARA.                      
+         EXEC CICS                               
+            RETURN TRANSID('AB39')               
+            COMMAREA(WS-DT-TIME)                 
+         END-EXEC.                               
+   999-RETURN-CICS-PARA.                         
+          EXEC CICS 
+          RETURN 
+       END-EXEC. 
