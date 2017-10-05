@@ -1,0 +1,19 @@
+//TRNG1391 JOB (ACCTII),'TRAINING',CLASS=A,        
+//         MSGCLASS=H,MSGLEVEL=(1,1),NOTIFY=&SYSUID
+//STEP01  EXEC PGM=IDCAMS                          
+//SYSPRINT DD SYSOUT=*                             
+//SYSOUT  DD SYSOUT=*                              
+//SYSIN   DD *                                     
+  DEFINE CLUSTER                  -                
+  (NAME (TRNG139.EXAMPLE.ESDSST)   -               
+  VOLUME(ADCD32)                  -                
+  TRACKS(1,2)                     -                
+  CISZ(512)                       -                
+  RECORDSIZE(80,80)               -                
+  NONINDEXED)                     -                
+  DATA                            -                
+  (NAME (TRNG139.EXAMPLE.ESDSST.DATA))             
+  IF LASTCC = 0 THEN -                             
+  LISTCAT ENTRIES                 -                
+    (TRNG139.EXAMPLE.ESDSST) ALL   
+/*                               
