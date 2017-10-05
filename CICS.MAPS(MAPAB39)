@@ -1,0 +1,58 @@
+ MAPAB39  DFHMSD TYPE=&SYSPARM,MODE=INOUT,TERM=ALL,                     X
+                LANG=COBOL,TIOAPFX=YES,CTRL=(FREEKB),DSATTS=COLOR,      X
+                MAPATTS=COLOR                                            
+ CUSTSCR  DFHMDI SIZE=(24,80),LINE=1,COLUMN=1                            
+          DFHMDF POS=(1,63),LENGTH=5,INITIAL='DATE:',ATTRB=ASKIP,       X
+                COLOR=BLUE                                               
+ DATE     DFHMDF POS=(1,69),LENGTH=8,ATTRB=(PROT,NUM),COLOR=YELLOW       
+          DFHMDF POS=(1,78),LENGTH=1,ATTRB=ASKIP                         
+          DFHMDF POS=(2,63),LENGTH=5,INITIAL='TIME:',ATTRB=ASKIP,       X
+                COLOR=BLUE                                               
+ TIME     DFHMDF POS=(2,69),LENGTH=8,ATTRB=(PROT,NUM),COLOR=YELLOW       
+          DFHMDF POS=(2,78),LENGTH=1,ATTRB=ASKIP                         
+       DFHMDF POS=(4,25),LENGTH=26,INITIAL='-- TRAIN ENQUIRY SCREEN --',X
+                COLOR=PINK                                               
+          DFHMDF POS=(6,12),LENGTH=18,INITIAL='ENTER TRAIN NO   :',     X
+                          COLOR=NEUTRAL                                            
+ TRAINNO  DFHMDF POS=(6,33),LENGTH=6,ATTRB=(UNPROT,IC),INITIAL='______'  
+          DFHMDF POS=(6,40),LENGTH=1,ATTRB=ASKIP                         
+          DFHMDF POS=(8,12),LENGTH=18,ATTRB=PROT,                       X
+                INITIAL='TRAIN NAME       :',COLOR=NEUTRAL               
+ TRAINNA  DFHMDF POS=(8,33),LENGTH=20,ATTRB=PROT,INITIAL='_________'     
+          DFHMDF POS=(8,55),LENGTH=1,ATTRB=ASKIP                         
+          DFHMDF POS=(9,12),LENGTH=18,ATTRB=PROT,                       X
+                INITIAL='TRAIN TYPE       :',COLOR=NEUTRAL               
+ TRAINTY  DFHMDF POS=(9,33),LENGTH=1,ATTRB=PROT,INITIAL='_'              
+          DFHMDF POS=(9,35),LENGTH=1,ATTRB=ASKIP                         
+        DFHMDF POS=(10,12),LENGTH=18,ATTRB=PROT,                        X
+                INITIAL='DEPT STATION     :',COLOR=NEUTRAL               
+ DEPTSTN  DFHMDF POS=(10,33),LENGTH=10,ATTRB=PROT,INITIAL='_______'      
+          DFHMDF POS=(10,46),LENGTH=1,ATTRB=PROT                         
+          DFHMDF POS=(11,12),LENGTH=18,ATTRB=PROT,                      X
+                INITIAL='DEPT TIME        :',COLOR=NEUTRAL               
+ DEPTTM   DFHMDF POS=(11,33),LENGTH=5,ATTRB=PROT,INITIAL='_____'         
+           DFHMDF POS=(11,41),LENGTH=1,ATTRB=ASKIP                        
+     DFHMDF POS=(12,12),LENGTH=18,ATTRB=PROT,                           X
+                INITIAL='ARRIVAL STATION  :',COLOR=NEUTRAL               
+ ARRSTN   DFHMDF POS=(12,33),LENGTH=10,ATTRB=PROT,INITIAL='________'     
+          DFHMDF POS=(12,45),LENGTH=1,ATTRB=ASKIP                        
+          DFHMDF POS=(13,12),LENGTH=18,ATTRB=PROT,                      X
+                INITIAL='ARR TIME         :',COLOR=NEUTRAL               
+ ARRTM    DFHMDF POS=(13,33),LENGTH=5,ATTRB=PROT,INITIAL='______'        
+          DFHMDF POS=(13,41),LENGTH=1,ATTRB=ASKIP                        
+          DFHMDF POS=(14,12),LENGTH=18,ATTRB=PROT,                      X
+                INITIAL='FARE             :',COLOR=NEUTRAL               
+ FARE     DFHMDF POS=(14,33),LENGTH=6,ATTRB=PROT,INITIAL='000.00'        
+          DFHMDF POS=(14,42),LENGTH=1,ATTRB=ASKIP                        
+          DFHMDF POS=(18,12),LENGTH=18,ATTRB=PROT,                      X
+                INITIAL='MESSAGE          :',COLOR=NEUTRAL               
+ MSG      DFHMDF POS=(18,33),LENGTH=25,ATTRB=ASKIP,INITIAL='________'    
+          DFHMDF POS=(18,60),LENGTH=1,ATTRB=ASKIP                        
+          DFHMDF POS=(20,10),LENGTH=15,INITIAL='ENTER = PROCESS',       X
+                       ATTRB=PROT,COLOR=BLUE                                    
+       DFHMDF POS=(20,26),LENGTH=13,INITIAL='F3/F12 = EXIT',         X
+             ATTRB=PROT,COLOR=BLUE                                    
+       DFHMDF POS=(20,42),LENGTH=12,INITIAL='F5 = REFRESH',          X
+             ATTRB=PROT,COLOR=BLUE                                    
+       DFHMSD TYPE=FINAL                                              
+       END                                                            
