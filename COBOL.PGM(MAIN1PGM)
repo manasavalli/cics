@@ -1,0 +1,29 @@
+      IDENTIFICATION DIVISION.                             
+      PROGRAM-ID.    MAIN1PGM.                             
+      AUTHOR.        MANASA.                               
+      INSTALLATION.  IBM E&T.                              
+      DATE-WRITTEN.  8/17/17.                              
+      DATE-COMPILED.                                       
+      SECURITY.      NONE.                                 
+   ******************************************************  
+   * MY SECOND PROGRAM                                     
+   ******************************************************  
+      ENVIRONMENT DIVISION.                                
+      DATA DIVISION.                                       
+      WORKING-STORAGE SECTION.                             
+    01   WS-A      PIC 9(1) VALUE 7.                       
+    01   WS-B      PIC 9(1) VALUE 8.                       
+        01   WS-C      PIC 9(2) VALUE 5.                               
+    01   WS-PGMNAME PIC X(8) VALUE "SUB1PGM".                      
+      PROCEDURE DIVISION.                                          
+           DISPLAY WS-A.                                           
+           DISPLAY WS-B.                                           
+           DISPLAY WS-C.                                           
+           CALL WS-PGMNAME USING BY CONTENT WS-A WS-B WS-C         
+             ON EXCEPTION DISPLAY "PROGRAM CALL WAS UNSUCCESSFUL." 
+             NOT ON EXCEPTION DISPLAY "SUCCESSFUL." CONTINUE       
+           END-CALL.                                               
+           DISPLAY WS-A.                                           
+           DISPLAY WS-B.                                           
+           DISPLAY WS-C.                                           
+                 STOP RUN.                                         
