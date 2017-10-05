@@ -1,0 +1,22 @@
+     IDENTIFICATION DIVISION.                               
+     PROGRAM-ID.    MODULE2.                                
+     AUTHOR.        MANASA.                                 
+     INSTALLATION.  IBM E&T.                                
+     DATE-WRITTEN.  8/17/17.                                
+     DATE-COMPILED.                                         
+     SECURITY.      NONE.                                   
+  ******************************************************    
+  * MY FIRST PROGRAM                                        
+  ******************************************************    
+     ENVIRONMENT DIVISION.                                  
+     DATA DIVISION.                                         
+     WORKING-STORAGE SECTION.                               
+   01 SHARDATA PIC X(32) EXTERNAL.                          
+     PROCEDURE DIVISION.                                    
+               DISPLAY "ENTERING  MODULE2."           
+          DISPLAY SHARDATA.                      
+          MOVE "ENDING CONTENTS" TO SHARDATA.    
+          DISPLAY "LEAVING MODULE2."             
+          EXIT PROGRAM.                          
+                 STOP RUN.                       
+      END PROGRAM MODULE2.                       
