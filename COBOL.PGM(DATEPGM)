@@ -1,0 +1,25 @@
+     IDENTIFICATION DIVISION.                            
+     PROGRAM-ID.    DATEPGM.                             
+     AUTHOR.        MANASA.                              
+     INSTALLATION.  IBM E&T.                             
+     DATE-WRITTEN.  8/17/17.                             
+     DATE-COMPILED.                                      
+     SECURITY.      NONE.                                
+  ****************************************************** 
+  * MY FIRST PROGRAM                                     
+  ****************************************************** 
+     ENVIRONMENT DIVISION.                               
+     DATA DIVISION.                                      
+     WORKING-STORAGE SECTION.                            
+   77 DUE-DATE   PIC 9(8).                               
+   77 INTEGER-DATE PIC S9(9).                            
+       PROCEDURE DIVISION.                                
+        MOVE FUNCTION CURRENT-DATE (1:8) TO DUE-DATE.  
+        COMPUTE INTEGER-DATE =                         
+              FUNCTION INTEGER-OF-DATE (DUE-DATE).     
+        ADD 30 TO INTEGER-DATE.                        
+        COMPUTE DUE-DATE =                             
+              FUNCTION DATE-OF-INTEGER (INTEGER-DATE). 
+        DISPLAY "INTEGER-DATE  " INTEGER-DATE.         
+        DISPLAY "DUE-DATE  " DUE-DATE.                 
+               STOP RUN.                               
