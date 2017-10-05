@@ -1,0 +1,41 @@
+      IDENTIFICATION DIVISION.                
+      PROGRAM-ID.    PROGAB64.                
+      ENVIRONMENT DIVISION.                   
+      DATA DIVISION.                          
+      LINKAGE SECTION.                        
+    01 DFHCOMMAREA.                           
+     02 LS-TR-REC.                            
+       05 LS-TR-NO PIC X(6).                  
+       05 LS-TR-NAME PIC X(20).               
+       05 LS-TR-TYPE PIC X(1).                
+       05 LS-DEP-STN PIC X(10).               
+       05 LS-DEP-TM  PIC X(5).                
+       05 LS-ARR-STN PIC X(10).               
+       05 LS-ARR-TM  PIC X(5).                
+       05 LS-FARE    PIC X(6).                
+            05 LS-MSG     PIC X(25).                        
+     05            PIC X(12).                        
+    PROCEDURE DIVISION.                              
+  000-MAIN-PARA.                                     
+         PERFORM 100-READ-FILE-PARA.                 
+         PERFORM 999-RETURN-MAIN-PARA.               
+  100-READ-FILE-PARA.                                
+        EXEC CICS                                    
+           READ FILE('VSAB14')                       
+           RIDFLD(LS-TR-NO)                          
+           INTO(LS-TR-REC)                           
+           LENGTH(LENGTH OF LS-TR-REC)               
+           NOHANDLE                                  
+        END-EXEC.                                    
+        EVALUATE(EIBRESP)                            
+          WHEN DFHRESP(NORMAL)                       
+                MOVE 'TRAIN NUMBER FOUND' TO LS-MSG  
+          WHEN DFHRESP(NOTFND)                       
+                            MOVE 'TRAIN NUMBER NOT FOUND' TO LS-MSG 
+             WHEN OTHER                                   
+                  MOVE 'USE CEDF TO DEBUG' TO LS-MSG      
+          END-EVALUATE.                                   
+    999-RETURN-MAIN-PARA.                                 
+          EXEC CICS                                       
+             RETURN                                       
+          END-EXEC.                                       
