@@ -1,0 +1,8 @@
+ //TRNG1391 JOB (ACCTII),'TRAINING',CLASS=A,         
+ //         MSGCLASS=H,MSGLEVEL=(1,1),NOTIFY=&SYSUID 
+ //STEP01 EXEC PGM=IDCAMS                            
+ //SYSPRINT DD SYSOUT=*                              
+ //SYSOUT   DD SYSOUT=*                              
+ //DD1      DD DSN=TRNG139.EXAMPLE.KSDS1,DISP=SHR    
+ //SYSIN    DD *                                     
+  PRINT INFILE(DD1) CHAR                             
