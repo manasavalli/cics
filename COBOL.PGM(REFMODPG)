@@ -1,0 +1,31 @@
+     IDENTIFICATION DIVISION.                              
+     PROGRAM-ID.    REFMODPG.                              
+     AUTHOR.        MANASA.                                
+     INSTALLATION.  IBM E&T.                               
+     DATE-WRITTEN.  8/17/17.                               
+     DATE-COMPILED.                                        
+     SECURITY.      NONE.                                  
+  ******************************************************   
+  * MY SECOND PROGRAM                                      
+  ******************************************************   
+     ENVIRONMENT DIVISION.                                 
+     DATA DIVISION.                                        
+     WORKING-STORAGE SECTION.                              
+   01   WS-WHOLE-NAME PIC X(30) VALUE "NAGA MANASA VALLI". 
+   01   WS-FIRST-NAME PIC X(4).                            
+     01   WS-MIDDLE-NAME PIC X(8).                         
+  01   WS-LAST-NAME PIC X(5).                           
+    PROCEDURE DIVISION.                                 
+          MOVE WS-WHOLE-NAME TO WS-FIRST-NAME.          
+          MOVE WS-WHOLE-NAME TO WS-MIDDLE-NAME.         
+          MOVE WS-WHOLE-NAME TO WS-LAST-NAME.           
+          DISPLAY WS-FIRST-NAME.                        
+          DISPLAY WS-MIDDLE-NAME.                       
+          DISPLAY WS-LAST-NAME.                         
+          MOVE WS-WHOLE-NAME (1:4) TO WS-FIRST-NAME.    
+          MOVE WS-WHOLE-NAME (6:6) TO WS-MIDDLE-NAME.   
+          MOVE WS-WHOLE-NAME (13:) TO WS-LAST-NAME.     
+          DISPLAY WS-FIRST-NAME.                        
+          DISPLAY WS-MIDDLE-NAME.                       
+          DISPLAY WS-LAST-NAME.                         
+          STOP  RUN.                                    
