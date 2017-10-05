@@ -1,0 +1,80 @@
+      IDENTIFICATION DIVISION.                            
+      PROGRAM-ID.    CALCP4.                              
+      AUTHOR.        MANASA.                              
+      INSTALLATION.  IBM E&T.                             
+      DATE-WRITTEN.  8/17/17.                             
+      DATE-COMPILED.                                      
+      SECURITY.      NONE.                                
+   ****************************************************** 
+   * READING FROM A FILE PROGRAM                          
+   ****************************************************** 
+      ENVIRONMENT DIVISION.                               
+      INPUT-OUTPUT SECTION.                               
+      FILE-CONTROL.                                       
+           SELECT OP3FILE ASSIGN TO OP3DD                 
+           ORGANIZATION IS SEQUENTIAL                     
+                      ACCESS IS SEQUENTIAL             
+           FILE STATUS IS WS-OP3FILE-ST.    
+           SELECT OP4FILE ASSIGN TO OP4DD   
+           ORGANIZATION IS SEQUENTIAL       
+           ACCESS IS SEQUENTIAL             
+           FILE STATUS IS WS-OP4FILE-ST.    
+      DATA DIVISION.                        
+      FILE SECTION.                         
+      FD OP3FILE                            
+           RECORDING MODE IS F.             
+    01 OP3REC.                              
+      05 WS-M PIC S9(3).                    
+      05 WS-N PIC X(1).                     
+      05      PIC X(76).                    
+      FD OP4FILE                            
+           RECORDING MODE IS F.             
+    01 OP4REC.                              
+      05 WS-OP3 PIC X(80).                  
+           WORKING-STORAGE SECTION.                              
+   01  WS-OP3FILE-EOF PIC X VALUE 'N'.                     
+      88 EOF-OP3FILE  VALUE 'Y'.                           
+   01  WS-OP4FILE-EOF PIC X VALUE 'N'.                     
+      88 EOF-OP4FILE  VALUE 'Y'.                           
+   77   WS-OP3FILE-ST      PIC X(2).                       
+   77   WS-OP4FILE-ST      PIC X(2).                       
+   77   WS-OP2 PIC X(80).                                  
+     PROCEDURE DIVISION.                                   
+   000-MAIN-PARA.                                          
+        PERFORM 100-OPEN-PARA.                             
+        IF WS-OP3FILE-ST = '00' AND WS-OP4FILE-ST = '00'   
+          PERFORM 200-READ-PARA UNTIL WS-OP3FILE-EOF = 'Y' 
+        ELSE                                               
+          DISPLAY "INVALID" WS-OP3FILE-ST                  
+        END-IF.                                            
+             STOP RUN.                                     
+   100-OPEN-PARA.                                          
+            OPEN INPUT OP3FILE.                   
+         OPEN OUTPUT OP4FILE.                  
+   200-READ-PARA.                              
+         READ OP3FILE                          
+           AT END                              
+             SET EOF-OP3FILE TO TRUE           
+           NOT AT END                          
+             PERFORM 400-WRITE-PARA WS-M TIMES 
+             INITIALIZE WS-OP3 BY SPACES       
+         END-READ.                             
+   300-CLOSE-PARA.                             
+         CLOSE OP3FILE.                        
+         CLOSE OP4FILE.                        
+   400-WRITE-PARA.                             
+         MOVE WS-OP3 TO WS-OP2.                
+         IF WS-M > 0 AND WS-M <  20            
+            STRING                             
+              " " DELIMITED BY SIZE            
+                           WS-N DELIMITED BY SIZE                           
+             " " DELIMITED BY SIZE                            
+             WS-OP2 DELIMITED BY SIZE                         
+             INTO WS-OP3                                      
+           END-STRING                                         
+           WRITE OP4REC                                       
+        ELSE                                                  
+          MOVE "INPUT IS NEGATIVE OR MORE THAN 20" TO WS-OP3  
+          WRITE OP4REC                                        
+          DISPLAY "DISPLAY IS NEGATIVE"                       
+        END-IF.                                               
