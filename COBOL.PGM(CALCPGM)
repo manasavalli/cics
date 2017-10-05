@@ -1,0 +1,112 @@
+      IDENTIFICATION DIVISION.                            
+      PROGRAM-ID.    CALCPGM.                             
+      AUTHOR.        MANASA.                              
+      INSTALLATION.  IBM E&T.                             
+      DATE-WRITTEN.  8/17/17.                             
+      DATE-COMPILED.                                      
+      SECURITY.      NONE.                                
+   ****************************************************** 
+   * READING FROM A FILE PROGRAM                          
+   ****************************************************** 
+      ENVIRONMENT DIVISION.                               
+      INPUT-OUTPUT SECTION.                               
+      FILE-CONTROL.                                       
+           SELECT OP1FILE ASSIGN TO OP1DD                 
+           ORGANIZATION IS SEQUENTIAL                     
+                       ACCESS IS SEQUENTIAL             
+            FILE STATUS IS WS-OP1FILE-ST.    
+            SELECT OP2FILE ASSIGN TO OP2DD   
+            ORGANIZATION IS SEQUENTIAL       
+            ACCESS IS SEQUENTIAL             
+            FILE STATUS IS WS-OP2FILE-ST.    
+       DATA DIVISION.                        
+       FILE SECTION.                         
+       FD OP1FILE                            
+            RECORDING MODE IS F.             
+     01 OP1REC.                              
+         05 FS-NUM1 PIC 9(3).                
+         05 FS-NUM2 PIC 9(3).                
+         05 FS-OP   PIC X(1).                
+         05         PIC X(73).               
+       FD OP2FILE                            
+            RECORDING MODE IS F.             
+     01 OP2REC.                              
+             05 FS1-NUM1 PIC 9(3).            
+        05 FS1-F2 PIC  X(1).             
+        05 FS1-OP   PIC X(15).           
+        05          PIC X(1).            
+        05 FS1-NUM2 PIC 9(3).            
+        05          PIC X(2).            
+        05 FS1-RESULT PIC 9(4).          
+        05         PIC X(51).            
+      WORKING-STORAGE SECTION.           
+    01   WS-OP1FILE-EOF PIC X VALUE 'N'. 
+       88 EOF-OP1FILE  VALUE 'Y'.        
+    01   WS-OP2FILE-EOF PIC X VALUE 'N'. 
+       88 EOF-OP2FILE  VALUE 'Y'.        
+    77   WS-OP1FILE-ST      PIC X(2).    
+    77   WS-OP2FILE-ST      PIC X(2).    
+    77   WS-C              PIC 9(3).     
+      PROCEDURE DIVISION.                
+      000-MAIN-PARA.                     
+             PERFORM 100-OPEN-FILE-PARA.                             
+       IF WS-OP1FILE-ST = '00' AND WS-OP2FILE-ST = '00'        
+         PERFORM 200-READ-FILE-PARA UNTIL WS-OP1FILE-EOF = 'Y' 
+       ELSE                                                    
+         DISPLAY 'ERROR IN OPEN '  WS-OP1FILE-ST WS-OP2FILE-ST 
+       END-IF.                                                 
+       PERFORM 300-CLOSE-FILE-PARA.                            
+       STOP RUN.                                               
+     100-OPEN-FILE-PARA.                                       
+         OPEN INPUT OP1FILE.                                   
+         OPEN OUTPUT OP2FILE.                                  
+     200-READ-FILE-PARA.                                       
+         READ OP1FILE                                          
+            AT END                                             
+               SET EOF-OP1FILE TO TRUE                         
+            NOT AT END                                         
+               PERFORM 210-EVALUATE-PARA                       
+               PERFORM 500-WRITE-PARA                          
+                       END-READ.                               
+                                                
+    300-CLOSE-FILE-PARA.                        
+        CLOSE OP1FILE.                          
+        CLOSE OP2FILE.                          
+    210-EVALUATE-PARA.                          
+          PERFORM 400-DISPLAY-PARA.             
+          EVALUATE FS-OP                        
+             WHEN 'A'                           
+                PERFORM 211-ADD-PARA            
+             WHEN 'S'                           
+                PERFORM 212-SUBTRACT-PARA       
+             WHEN 'M'                           
+                PERFORM 213-MULTIPLY-PARA       
+             WHEN 'D'                           
+                PERFORM 214-DIVIDE-PARA         
+             WHEN OTHER                         
+                DISPLAY "INCORRECT CODE" FS-OP  
+                           END-EVALUATE.                           
+           PERFORM 400-DISPLAY-PARA.               
+     211-ADD-PARA.                                 
+                MOVE 'ADDITION' TO FS1-OP.         
+                COMPUTE WS-C = FS-NUM1 + FS-NUM2.  
+     212-SUBTRACT-PARA.                            
+                MOVE 'SUBTRACTION' TO FS1-OP.      
+                COMPUTE WS-C = FS-NUM1 - FS-NUM2.  
+     213-MULTIPLY-PARA.                            
+                MOVE 'MULTIPLICATION' TO FS1-OP.   
+                COMPUTE WS-C = FS-NUM1 * FS-NUM2.  
+     214-DIVIDE-PARA.                              
+                MOVE 'DIVISION' TO FS1-OP.         
+                COMPUTE WS-C = FS-NUM1 / FS-NUM2.  
+     400-DISPLAY-PARA.                             
+                DISPLAY FS-NUM1.                   
+                DISPLAY FS-NUM2.                   
+                DISPLAY WS-C.                      
+                               DISPLAY FS-OP.            
+    500-WRITE-PARA.                      
+               MOVE FS-NUM1 TO FS1-NUM1. 
+               MOVE SPACE TO FS1-F2.     
+               MOVE FS-NUM2 TO FS1-NUM2. 
+               MOVE WS-C TO FS1-RESULT.  
+               WRITE OP2REC.             
