@@ -1,0 +1,35 @@
+select empno,firstnme concat lastname as fullname  
+from employee;                                     
+/*delete from employee                             
+where empno = '000030';                            
+                                                   
+update employee                                    
+set bonus = 800                                    
+where empno = '000030';*/                          
+                                                   
+select distinct p.projno,projname,actno            
+from project p,emp_act e                           
+where p.projno = e.projno and                      
+e.projno like 'ad%'                                
+order by e.actno,p.projno;                         
+/*select deptname,lastname,firstnme         
+from department inner join employee         
+on workdept = deptno and                    
+job = 'manager'                             
+order by deptname;                          
+                                            
+select deptname,lastname,firstnme           
+from department inner join employee         
+on empno = mgrno                            
+order by deptname;                          
+                                            
+select lastname,firstnme,deptname           
+from employee e,department d                
+where e.workdept = d.deptno and             
+deptname between 'a02' and 'd22'  and       
+job != 'manager'                            
+order by deptname,job,lastname,firstnme;    
+select lastname,firstnme,deptname      
+from employee e,department d           
+where e.workdept = d.deptno            
+order by deptname,lastname,firstnme;*/ 
