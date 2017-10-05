@@ -1,0 +1,32 @@
+      IDENTIFICATION DIVISION.                            
+      PROGRAM-ID.    INSPECTP.                            
+      AUTHOR.        MANASA.                              
+      INSTALLATION.  IBM E&T.                             
+      DATE-WRITTEN.  8/17/17.                             
+      DATE-COMPILED.                                      
+      SECURITY.      NONE.                                
+   ****************************************************** 
+   * MY FIRST PROGRAM                                     
+   ****************************************************** 
+      ENVIRONMENT DIVISION.                               
+      DATA DIVISION.                                      
+      WORKING-STORAGE SECTION.                            
+    77 WS-STRING  PIC X(30) VALUE '12AB2ABCDE123A'.       
+    77 WS-CNT    PIC 9(2).                                
+        PROCEDURE DIVISION.                                         
+        DISPLAY WS-CNT.                                         
+        INSPECT WS-STRING TALLYING WS-CNT FOR LEADING 'A'.      
+        DISPLAY WS-CNT.                                         
+        INSPECT WS-STRING REPLACING ALL 'AB' BY 'XY' BEFORE 'Z'.
+        DISPLAY WS-STRING.                                      
+        INSPECT WS-STRING TALLYING WS-CNT FOR ALL 'B'.          
+        DISPLAY WS-CNT.                                         
+        INSPECT WS-STRING TALLYING WS-CNT FOR ALL 'B' BEFORE    
+               INITIAL 'A'.                                     
+        DISPLAY WS-CNT.                                         
+        INSPECT WS-STRING TALLYING WS-CNT FOR ALL 'B' AFTER     
+               INITIAL 'Z'.                                     
+        DISPLAY WS-CNT.                                         
+        INSPECT WS-STRING TALLYING WS-CNT1 FOR CHARACTERS.      
+        DISPLAY WS-CNT1.                                        
+               STOP RUN.                                        
