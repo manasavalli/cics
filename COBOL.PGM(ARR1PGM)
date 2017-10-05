@@ -1,0 +1,38 @@
+      IDENTIFICATION DIVISION.                           
+      PROGRAM-ID.    ARR1PGM.                            
+      AUTHOR.        MANASA.                             
+      INSTALLATION.  IBM E&T.                            
+      DATE-WRITTEN.  8/17/17.                            
+      DATE-COMPILED.                                     
+      SECURITY.      NONE.                               
+   ******************************************************
+   * MY SECOND PROGRAM                                   
+   ******************************************************
+      ENVIRONMENT DIVISION.                              
+      DATA DIVISION.                                     
+      WORKING-STORAGE SECTION.                           
+    01 TABLE-ELEMENT.                                    
+       02 TB-ELEMENT OCCURS 10 TIMES INDEXED BY NDX.     
+               03 KEYFIELD PIC X(3).                                    
+        03 FULLFORM PIC X(30).                                   
+  01 IBM-FLAG  PIC X(15).                                        
+       88 NO-IBM VALUE 'FALSE'.                                  
+       88 FOUND-IBM VALUE 'TRUE'.                                
+    PROCEDURE DIVISION.                                          
+           SET NDX TO 1.                                         
+           MOVE 'TCS' TO KEYFIELD(1).                            
+           MOVE 'IBM' TO KEYFIELD(2).                            
+           MOVE 'TATA CONSULTANCIES' TO FULLFORM(1).             
+           MOVE 'INTERNATIONAL BUSINESS MACHINES' TO FULLFORM(2).
+               SEARCH TB-ELEMENT VARYING NDX                     
+                  WHEN KEYFIELD(NDX) = "IBM"                     
+                     SET FOUND-IBM TO TRUE                       
+                  WHEN KEYFIELD(NDX) = HIGH-VALUES               
+                     SET NO-IBM TO TRUE                          
+               END-SEARCH                                        
+               IF IBM-FLAG = "TRUE"                              
+                               DISPLAY FULLFORM(NDX) 
+               ELSE                   
+                DISPLAY "NOT FOUND"   
+               END-IF.                
+               STOP RUN.              
