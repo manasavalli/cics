@@ -1,0 +1,21 @@
+      IDENTIFICATION DIVISION.                            
+      PROGRAM-ID.    ARRPGM.                              
+      AUTHOR.        MANASA.                              
+      INSTALLATION.  IBM E&T.                             
+      DATE-WRITTEN.  8/17/17.                             
+      DATE-COMPILED.                                      
+      SECURITY.      NONE.                                
+   ****************************************************** 
+   * MY SECOND PROGRAM                                    
+   ****************************************************** 
+      ENVIRONMENT DIVISION.                               
+      DATA DIVISION.                                      
+      WORKING-STORAGE SECTION.                            
+    01 TABLE-OF-MONTHS.                                   
+       02 MONTHS  OCCURS 12 TIMES PIC X(10).              
+            PROCEDURE DIVISION.                 
+              MOVE 'MARCH' TO MONTHS(1). 
+              MOVE 'APRIL' TO MONTHS(2). 
+              MOVE 'MAY' TO MONTHS(3).   
+                DISPLAY TABLE-OF-MONTHS. 
+                STOP RUN.                
