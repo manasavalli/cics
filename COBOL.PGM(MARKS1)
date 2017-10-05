@@ -1,0 +1,42 @@
+    IDENTIFICATION DIVISION.                              
+    PROGRAM-ID.    MARKS1.                                
+    AUTHOR.        MANASA.                                
+    INSTALLATION.  IBM E&T.                               
+    DATE-WRITTEN.  8/17/17.                               
+    DATE-COMPILED.                                        
+    SECURITY.      NONE.                                  
+ ******************************************************   
+ * MY FIRST PROGRAM                                       
+ ******************************************************   
+    ENVIRONMENT DIVISION.                                 
+    DATA DIVISION.                                        
+    WORKING-STORAGE SECTION.                              
+  77 WS-NAME PIC X(20).                                   
+  77 WS-ROLLNO  PIC X(20).                                
+     77 WS-M1  PIC 9(3).                      
+   77 WS-M2  PIC 9(3).                      
+   77 WS-M3  PIC 9(3).                      
+   77 WS-M4  PIC 9(3).                      
+   77 WS-M5  PIC 9(3).                      
+   77 WS-TOTAL  PIC 9(10).                  
+   77 WS-AVG  PIC 9(4)V99.                  
+     PROCEDURE DIVISION.                    
+         ACCEPT  WS-NAME.                   
+         ACCEPT  WS-ROLLNO.                 
+         ACCEPT  WS-M1.                     
+         ACCEPT  WS-M2.                     
+         ACCEPT  WS-M3.                     
+         ACCEPT  WS-M4.                     
+         ACCEPT  WS-M5.                     
+         DISPLAY WS-NAME.                   
+         DISPLAY WS-ROLLNO.                 
+         DISPLAY WS-M1.                     
+                 DISPLAY WS-M2.                                            
+        DISPLAY WS-M3.                                            
+        DISPLAY WS-M4.                                            
+        DISPLAY WS-M5.                                            
+        COMPUTE WS-TOTAL = WS-M1 + WS-M2 + WS-M3 + WS-M4 + WS-M5. 
+        COMPUTE WS-AVG = WS-TOTAL / 5.                            
+        DISPLAY "TOTAL" WS-TOTAL.                                 
+        DISPLAY "AVG" WS-AVG.                                     
+               STOP RUN.                                          
