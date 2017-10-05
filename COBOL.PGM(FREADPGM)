@@ -1,0 +1,83 @@
+    IDENTIFICATION DIVISION.                            
+    PROGRAM-ID.    FREADPGM.                            
+    AUTHOR.        MANASA.                              
+    INSTALLATION.  IBM E&T.                             
+    DATE-WRITTEN.  8/17/17.                             
+    DATE-COMPILED.                                      
+    SECURITY.      NONE.                                
+ ****************************************************** 
+ * READING FROM A FILE PROGRAM                          
+ ****************************************************** 
+    ENVIRONMENT DIVISION.                               
+    INPUT-OUTPUT SECTION.                               
+    FILE-CONTROL.                                       
+         SELECT OPFILE ASSIGN TO OPDD                   
+         ORGANIZATION IS SEQUENTIAL                     
+                   ACCESS IS SEQUENTIAL                
+          FILE STATUS IS WS-OPFILE-ST.        
+     DATA DIVISION.                           
+     FILE SECTION.                            
+     FD OPFILE                                
+          RECORDING MODE IS F.                
+   01 OPREC.                                  
+       05 FS-OPFLD PIC X.                     
+       05          PIC X(79).                 
+     WORKING-STORAGE SECTION.                 
+   01   WS-OPFILE-EOF PIC X VALUE 'N'.        
+      88 EOF-OPFILE  VALUE 'Y'.               
+   77   WS-OPFILE-ST      PIC X(2).           
+   77   WS-A              PIC 9(1) VALUE 3.   
+   77   WS-B              PIC 9(1) VALUE 4.   
+   77   WS-C              PIC 9(1).           
+     PROCEDURE DIVISION.                      
+     000-MAIN-PARA.                           
+             PERFORM 100-OPEN-FILE-PARA.                           
+        IF WS-OPFILE-ST = '00'                                
+          PERFORM 200-READ-FILE-PARA UNTIL WS-OPFILE-EOF = 'Y'
+        ELSE                                                  
+          DISPLAY 'ERROR IN OPEN '  WS-OPFILE-ST              
+        END-IF.                                               
+        PERFORM 300-CLOSE-FILE-PARA.                          
+        STOP RUN.                                             
+      100-OPEN-FILE-PARA.                                     
+          OPEN INPUT OPFILE.                                  
+                                                              
+      200-READ-FILE-PARA.                                     
+          READ OPFILE                                         
+             AT END                                           
+                SET EOF-OPFILE TO TRUE                        
+             NOT AT END                                       
+                PERFORM 210-EVALUATE-PARA                     
+          END-READ.                                           
+                                                              
+    300-CLOSE-FILE-PARA.                            
+        CLOSE OPFILE.                               
+                                                    
+    210-EVALUATE-PARA.                              
+          PERFORM 400-DISPLAY-PARA.                 
+          EVALUATE FS-OPFLD                         
+             WHEN '+'                               
+                PERFORM 211-ADD-PARA                
+             WHEN '-'                               
+                PERFORM 212-SUBTRACT-PARA           
+             WHEN '*'                               
+                PERFORM 213-MULTIPLY-PARA           
+             WHEN '/'                               
+                PERFORM 214-DIVIDE-PARA             
+             WHEN OTHER                             
+                DISPLAY "INCORRECT CODE" FS-OPFLD   
+          END-EVALUATE.                             
+                    PERFORM 400-DISPLAY-PARA.         
+    211-ADD-PARA.                           
+               COMPUTE WS-C = WS-A + WS-B.  
+    212-SUBTRACT-PARA.                      
+               COMPUTE WS-C = WS-B - WS-A.  
+    213-MULTIPLY-PARA.                      
+               COMPUTE WS-C = WS-A * WS-B.  
+    214-DIVIDE-PARA.                        
+               COMPUTE WS-C = WS-B / WS-A.  
+    400-DISPLAY-PARA.                       
+               DISPLAY WS-A.                
+               DISPLAY WS-B.                
+               DISPLAY WS-C.                
+               DISPLAY FS-OPFLD.            
