@@ -1,0 +1,19 @@
+     IDENTIFICATION DIVISION.                                 
+     PROGRAM-ID.    RUNGREET.                                 
+     AUTHOR.        MANASA.                                   
+     INSTALLATION.  IBM E&T.                                  
+     DATE-WRITTEN.  8/17/17.                                  
+     DATE-COMPILED.                                           
+     SECURITY.      NONE.                                     
+  ******************************************************      
+  * MY FIRST PROGRAM                                          
+  ******************************************************      
+     ENVIRONMENT DIVISION.                                    
+     DATA DIVISION.                                           
+     WORKING-STORAGE SECTION.                                 
+      77 WS-A  PIC X(30)           VALUE "WELCOME TO IBM - ". 
+      77 WS-B  PIC X(20).                                     
+          PROCEDURE DIVISION.      
+        ACCEPT WS-B.         
+        DISPLAY WS-A  WS-B.  
+               STOP RUN.     
