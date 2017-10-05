@@ -1,0 +1,13 @@
+//TRNG139C JOB CLASS=A,MSGCLASS=H,NOTIFY=&SYSUID,REGION=0M             
+//IBMLIB   JCLLIB  ORDER=(TRNG001.ALL.PROCLIB,'ADCD.Z22A.PROCLIB')     
+//******************************************************************** 
+//* PGM NAME :- &USER..DB2.PGM(&MEM)      - SYSIN                      
+//* DB2 PGMS :- &USER..DB2.PGM            - SYSLIB                     
+//* DB2 DCLG :- &USER.DB2.DCLGEN          - SYSLIB                     
+//* DB2 DBRM :- &USER..DB2.DBRM(&MEM)     - DBRMLIB                    
+//* DB2 LOAD :- &USER..DB2.LOAD(&MEM)     - LOADLIB                    
+//******************************************************************** 
+//JS0010 EXEC  DSNHICOB,MEM=READEMP,                     *COB PGM NAME 
+//             USER=TRNG139                              * UR USER ID  
+//PC.SYSLIB DD DSN=TRNG139.DB2.DCLGEN,DISP=SHR           * DCLGEN      
+//PC.SYSIN  DD DSN=TRNG139.DB2.PGM(READEMP),DISP=SHR     * COB PGM     
