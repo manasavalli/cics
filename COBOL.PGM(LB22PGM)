@@ -1,0 +1,30 @@
+    IDENTIFICATION DIVISION.                             
+    PROGRAM-ID.    LB22PGM.                              
+    AUTHOR.        MANASA.                               
+    INSTALLATION.  IBM E&T.                              
+    DATE-WRITTEN.  8/17/17.                              
+    DATE-COMPILED.                                       
+    SECURITY.      NONE.                                 
+ ******************************************************  
+ * MY FIRST PROGRAM                                      
+ ******************************************************  
+    ENVIRONMENT DIVISION.                                
+    DATA DIVISION.                                       
+    WORKING-STORAGE SECTION.                             
+  01 TODAY.                                              
+     05 WS-THIS-YEAR  PIC 9999.                          
+            05 WS-THIS-MONTH  PIC 99.                        
+       05 WS-THIS-DAY  PIC 99.                          
+    01 TODAY1 PIC 9(8).                                 
+      PROCEDURE DIVISION.                               
+          ACCEPT WS-THIS-DAY.                           
+          ACCEPT WS-THIS-MONTH.                         
+          ACCEPT WS-THIS-YEAR.                          
+          ACCEPT TODAY1 FROM DATE YYYYMMDD.             
+          IF TODAY1 = TODAY                             
+            THEN                                        
+                DISPLAY "THE DATE IS VALID."            
+            ELSE                                        
+                DISPLAY "THE DATE IS NOT VALID."        
+          END-IF.                                       
+                 STOP RUN.                              
