@@ -1,0 +1,74 @@
+select lastname,deptname                 
+from employee,department                 
+where empno = mgrno;                     
+                                         
+/*select empno,                          
+ case when edlevel = '18' then 'ug'      
+      when edlevel = '20' then 'pg'      
+      else 'other'                       
+ end                                     
+      as education                       
+from employee;                           
+                                         
+select sum(salary) from employee;        
+                                         
+select avg(salary) from employee;        
+ select max(salary) from employee;                
+                                                  
+ select min(salary) from employee;                
+                                                  
+ select count(distinct hiredate) from employee;   
+                                                  
+ select count(hiredate) from employee;            
+                                                  
+ select count(*) from employee;                   
+                                                  
+ select mgrno,deptno                              
+ from department                                  
+ where mgrno is not null                          
+ order by mgrno;                                  
+                                                  
+ select projno,actno,emstdate,emendate            
+ from emp_act                                     
+  where projno like 'ad%' and                        
+ (actno = 10 or actno = 80 or actno = 180)          
+ order by projno,actno;                             
+                                                    
+ select lastname,salary,bonus,comm                  
+ from employee                                      
+ where salary > 22000 and                           
+ bonus in(400,500) and comm < 1900                  
+ order by lastname;                                 
+                                                    
+ /*select lastname,salary,bonus,comm                
+ from employee                                      
+ where (salary > 22000 and bonus = 400) or          
+ (bonus = 500 and comm < 1900)                      
+ order by lastname;                                 
+                                                    
+ select lastname,salary,comm                        
+ from employee                                      
+ where salary > 20000.00               
+and hiredate > '1979-12-31';          
+                                      
+select lastname,salary,bonus          
+from employee                         
+where sex = 'm';                      
+                                      
+select distinct empno,projno          
+from emp_act                          
+where empno <= '100'                  
+order by empno;                       
+                                      
+select distinct edlevel               
+from employee                         
+order by edlevel desc;                
+                                      
+select lastname,firstnme,workdept     
+from employee                         
+order by workdept desc,lastname desc;    
+                                         
+select empno,lastname,birthdate,salary   
+from employee                            
+where salary > 30000.00                  
+order by salary desc;*/                  
