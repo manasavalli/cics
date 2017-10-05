@@ -1,0 +1,186 @@
+   IDENTIFICATION DIVISION.                             
+   PROGRAM-ID.    TRAINPGM.                             
+   AUTHOR.        MANASA.                               
+   INSTALLATION.  IBM E&T.                              
+   DATE-WRITTEN.  8/17/17.                              
+   DATE-COMPILED.                                       
+   SECURITY.      NONE.                                 
+******************************************************  
+* READING STUDENT DETAILS FROM A FILE PROGRAM           
+******************************************************  
+   ENVIRONMENT DIVISION.                                
+   INPUT-OUTPUT SECTION.                                
+   FILE-CONTROL.                                        
+        SELECT KSDSTR ASSIGN TO KSDSDD                  
+        ORGANIZATION IS INDEXED                         
+                   ACCESS IS RANDOM                      
+           RECORD KEY IS FS-TRAIN-NUMBER         
+           FILE STATUS IS WS-KSDSTR-ST VSAM-RETN.
+                                                 
+           SELECT TRAIN3 ASSIGN TO TRAIN3DD      
+           ORGANIZATION IS SEQUENTIAL            
+           ACCESS IS SEQUENTIAL                  
+           FILE STATUS IS WS-TRAIN3DD-ST.        
+                                                 
+           SELECT TRAIN2 ASSIGN TO TRAIN2DD      
+           ORGANIZATION IS SEQUENTIAL            
+           ACCESS IS SEQUENTIAL                  
+           FILE STATUS IS WS-TRAIN2DD-ST.        
+                                                 
+      DATA DIVISION.                             
+      FILE SECTION.                              
+      FD KSDSTR.                                 
+    01 KSDSSTRE.                                 
+          05 FS-TRAIN-NUMBER    PIC X(6).                   
+      05 FS-TRAIN-TYPE   PIC X(1).                      
+      05 FS-TRAIN-NAME  PIC X(20).                      
+      05 FS-TRAIN-DEP-STN    PIC X(10).                 
+      05 FS-TRAIN-DEP-TIME     PIC X(5).                
+      05 FS-TRAIN-ARR-STN   PIC X(10).                  
+      05 FS-TRAIN-ARR-TIME    PIC X(05).                
+      05 FS-TRAIN-FARE    PIC X(10).                    
+      05              PIC X(33).                        
+    FD TRAIN3                                           
+          RECORDING MODE IS F.                          
+  01 TRAIN3RE PIC X(80).                                
+    FD TRAIN2                                           
+         RECORDING MODE IS F.                           
+  01 TRAIN2RE.                                          
+     05 FS2-TRAIN-NUMBER PIC X(06).                     
+     05                  PIC X(74).                     
+    WORKING-STORAGE SECTION.                            
+      01   WS-KSDSTR-EOF PIC X VALUE 'N'.             
+     88 EOF-KSDSTR  VALUE 'Y'.                    
+  01   WS-TRAIN3-EOF PIC X VALUE 'N'.             
+     88 EOF-TRAIN3  VALUE 'Y'.                    
+  01   WS-TRAIN2-EOF PIC X VALUE 'N'.             
+     88 EOF-TRAIN2  VALUE 'Y'.                    
+  01   VSAM-RETN.                                 
+     05 VSAM-RETN-CODE PIC 99 BINARY.             
+     05 VSAM-FUNC-CODE PIC 99 BINARY.             
+     05 VSAM-FDBK-CODE PIC 99 BINARY.             
+  77   WS-TRAIN2DD-ST      PIC X(2).              
+  77   WS-TRAIN3DD-ST      PIC X(2).              
+  77   WS-KSDSTR-ST       PIC X(2).               
+  77   WS-YEAR       PIC X(4).                    
+  77   WS-MONTH       PIC X(2).                   
+  77   WS-DATE1       PIC X(2).                   
+  77   WS-DATE       PIC X(10).                   
+  77   WS-TIME       PIC X(5).                    
+     77   WS-HRS       PIC X(2).                        
+   77   WS-MIN       PIC X(2).                        
+   01 WS-TRAIN-REC.                                   
+       05 FS1-TRAIN-NUMBER    PIC X(6).               
+       05 FS1-TRAIN-TYPE   PIC X(1).                  
+       05 FS1-TRAIN-NAME  PIC X(20).                  
+       05 FS1-TRAIN-DEP-STN    PIC X(10).             
+       05 FS1-TRAIN-DEP-TIME     PIC X(5).            
+       05 FS1-TRAIN-ARR-STN   PIC X(10).              
+       05 FS1-TRAIN-ARR-TIME    PIC X(05).            
+       05 FS1-TRAIN-FARE    PIC X(10).                
+       05              PIC X(13).                     
+   01 WS-TRAIN-AST  PIC X(80) VALUE ALL '*'.          
+   01 WS-TRAIN-TIT.                                   
+       05 RS1-TRAINNO    PIC X(5) VALUE 'NO'.         
+       05              PIC X(1).                      
+       05 RS1-TRAINTYPE  PIC X(1) VALUE 'T'.          
+       05 RS1-TRAINNAME   PIC X(19) VALUE 'NAME'.     
+             05              PIC X(1).                         
+      05 RS1-TRAINDEP    PIC X(9) VALUE 'DEPSTN'.       
+      05              PIC X(1).                         
+      05 RS1-TRAINDEPT     PIC X(8) VALUE 'DEPTIME'.    
+      05              PIC X(35).                        
+  01 WS-TRAIN-DATE.                                     
+      05 RS1-DATE PIC X(9) VALUE 'DATE:-'.              
+      05 RS1-ADATE PIC X(10).                           
+      05           PIC X(61).                           
+  01 WS-TRAIN-TIME.                                     
+      05 RS1-TIME PIC X(7) VALUE 'TIME:-'.              
+      05 RS1-ATIME PIC X(5).                            
+      05           PIC X(68).                           
+  01 WS-TRAIN-RECNF.                                    
+      05 WS-NFTRAIN-NUMBER PIC X(6).                    
+      05         PIC X(5).                              
+      05         PIC X(69)  VALUE 'NOT FOUND'.          
+    PROCEDURE DIVISION.                                 
+      000-MAIN-PARA.                                              
+    PERFORM 100-OPEN-FILE-PARA.                               
+    IF VSAM-RETN-CODE = 00 AND WS-TRAIN2DD-ST = '00' AND      
+            WS-TRAIN3DD-ST = '00'                             
+      PERFORM 400-WRITE-HDR-PARA                              
+      PERFORM 200-READ-FILE-PARA UNTIL WS-TRAIN2-EOF = 'Y'    
+      PERFORM 500-WRITE-FOOTER-PARA                           
+    ELSE                                                      
+      DISPLAY 'ERROR IN OPEN '  WS-TRAIN2DD-ST WS-TRAIN3DD-ST 
+    END-IF.                                                   
+    PERFORM 300-CLOSE-FILE-PARA.                              
+    STOP RUN.                                                 
+  100-OPEN-FILE-PARA.                                         
+      OPEN INPUT KSDSTR.                                      
+      OPEN INPUT TRAIN2.                                      
+      OPEN OUTPUT TRAIN3.                                     
+  200-READ-FILE-PARA.                                         
+      READ TRAIN2                                             
+                 AT END                                               
+              SET EOF-TRAIN2 TO TRUE                            
+           NOT AT END                                           
+              PERFORM 600-READ-KSDS-PARA                        
+        END-READ.                                               
+                                                                
+    300-CLOSE-FILE-PARA.                                        
+        CLOSE KSDSTR.                                           
+        CLOSE TRAIN2.                                           
+        CLOSE TRAIN3.                                           
+    211-WRITE-PARA.                                             
+          DISPLAY "                   ".                        
+          MOVE FS-TRAIN-NUMBER TO  FS1-TRAIN-NUMBER             
+          MOVE FS-TRAIN-TYPE TO  FS1-TRAIN-TYPE                 
+          MOVE FS-TRAIN-NAME TO  FS1-TRAIN-NAME                 
+          MOVE FS-TRAIN-DEP-STN TO  FS1-TRAIN-DEP-STN           
+          MOVE FS-TRAIN-DEP-TIME TO FS1-TRAIN-DEP-TIME          
+          MOVE FS-TRAIN-ARR-STN TO  FS1-TRAIN-ARR-STN           
+                     MOVE FS-TRAIN-ARR-TIME TO  FS1-TRAIN-ARR-TIME    
+           MOVE FS-TRAIN-FARE TO  FS1-TRAIN-FARE            
+           WRITE TRAIN3RE FROM WS-TRAIN-REC.                
+           DISPLAY "WRITTEN TO THE FILE".                   
+     400-WRITE-HDR-PARA.                                    
+          WRITE TRAIN3RE FROM WS-TRAIN-AST.                 
+          MOVE FUNCTION CURRENT-DATE(1:4) TO WS-YEAR.       
+          MOVE FUNCTION CURRENT-DATE(5:2) TO WS-MONTH.      
+          MOVE FUNCTION CURRENT-DATE(7:2) TO WS-DATE1.      
+          STRING                                            
+            WS-DATE1 DELIMITED BY SIZE                      
+            '/' DELIMITED BY SIZE                           
+            WS-MONTH DELIMITED BY SIZE                      
+            '/' DELIMITED BY SIZE                           
+            WS-YEAR DELIMITED BY SIZE                       
+            INTO WS-DATE                                    
+          END-STRING.                                       
+          MOVE WS-DATE TO RS1-ADATE.                        
+                   WRITE TRAIN3RE FROM WS-TRAIN-DATE.                 
+         MOVE FUNCTION CURRENT-DATE(9:2) TO WS-HRS.         
+         MOVE FUNCTION CURRENT-DATE(11:2) TO WS-MIN.        
+         STRING                                             
+           WS-HRS DELIMITED BY SIZE                         
+           ':' DELIMITED BY SIZE                            
+           WS-MIN DELIMITED BY SIZE                         
+           INTO WS-TIME                                     
+         END-STRING                                         
+         MOVE WS-TIME TO RS1-ATIME.                         
+         WRITE TRAIN3RE FROM WS-TRAIN-TIME.                 
+         WRITE TRAIN3RE FROM WS-TRAIN-AST.                  
+         WRITE TRAIN3RE FROM WS-TRAIN-TIT.                  
+         WRITE TRAIN3RE FROM WS-TRAIN-AST.                  
+    500-WRITE-FOOTER-PARA.                                  
+         WRITE TRAIN3RE FROM WS-TRAIN-AST.                  
+    600-READ-KSDS-PARA.                                     
+         MOVE FS2-TRAIN-NUMBER TO FS-TRAIN-NUMBER.          
+                   READ KSDSTR RECORD KEY IS FS-TRAIN-NUMBER         
+             INVALID KEY                                    
+               PERFORM 700-NOTFOUND-WRITE-PARA              
+             NOT INVALID KEY                                
+               PERFORM 211-WRITE-PARA                       
+          END-READ.                                         
+     700-NOTFOUND-WRITE-PARA.                               
+          MOVE FS-TRAIN-NUMBER TO WS-NFTRAIN-NUMBER.        
+          WRITE TRAIN3RE FROM WS-TRAIN-RECNF.               
