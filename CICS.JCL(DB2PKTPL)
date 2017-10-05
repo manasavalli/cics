@@ -1,0 +1,18 @@
+//TRNG139P JOB CLASS=A,MSGCLASS=H,NOTIFY=&SYSUID,REGION=0M             
+//*********************************************************************
+//* CHANGE THE PLAN DB2PGM1 TO YOUR PLAN NAME                         *
+//* DO NOT CHANGE THE PKLIST(COL0001.*)                               *
+//*********************************************************************
+//BIND     EXEC PGM=IKJEFT01,DYNAMNBR=20                               
+//STEPLIB  DD   DSN=DSNB10.SDSNLOAD,DISP=SHR                           
+//SYSTSPRT DD   SYSOUT=*                                               
+//SYSPRINT DD   SYSOUT=*                                               
+//SYSUDUMP DD   SYSOUT=*                                               
+//SYSTSIN  DD  *                                                       
+   DSN SYSTEM(DBBG)                                                    
+       BIND PLAN(PROGAB89)              -                              
+       PKLIST(COL0001.*)               -                               
+       ACT(REP)                        -                               
+       ISO(CS)                                                         
+   END                                                                 
+    /* 
