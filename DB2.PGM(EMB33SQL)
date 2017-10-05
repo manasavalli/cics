@@ -1,0 +1,62 @@
+      IDENTIFICATION DIVISION.              
+      PROGRAM-ID.    EMB33SQL.              
+      ENVIRONMENT DIVISION.                 
+      DATA DIVISION.                        
+      WORKING-STORAGE SECTION.              
+   01 WS-SQLCODE PIC -9(9).                 
+          EXEC SQL                          
+            INCLUDE SQLCA                   
+          END-EXEC.                         
+          EXEC SQL                          
+            INCLUDE EMPLOYEE                
+          END-EXEC.                         
+          EXEC SQL                          
+                     DECLARE EMP_CUR CURSOR FOR                             
+           SELECT EMPNO,                                          
+                  LASTNAME,                                       
+                  BIRTHDATE,                                      
+                  SALARY                                          
+           FROM EMPLOYEE                                          
+           WHERE  BONUS < :BONUS                                  
+         END-EXEC.                                                
+     PROCEDURE DIVISION.                                          
+  000-MAIN-PARA.                                                  
+       MOVE 700 TO BONUS.                                         
+       PERFORM 100-OPEN-EMPCUR-PARA.                              
+       IF SQLCODE = 0                                             
+         PERFORM 200-QUERY-PARA UNTIL SQLCODE = 100 OR SQLCODE < 0
+       ELSE                                                       
+         DISPLAY "ERROR IN OPEN"                                  
+       END-IF.                                                    
+       PERFORM 400-CLOSE-EMPCUR-PARA.                             
+                    STOP RUN.                           
+  100-OPEN-EMPCUR-PARA.                          
+       EXEC SQL                                  
+          OPEN EMP_CUR                           
+       END-EXEC.                                 
+  200-QUERY-PARA.                                
+         EXEC SQL                                
+           FETCH EMP_CUR                         
+           INTO :EMPNO,                          
+                :LASTNAME,                       
+                :BIRTHDATE,                      
+                :SALARY                          
+         END-EXEC.                               
+         PERFORM 300-EVALUATE-PARA.              
+  300-EVALUATE-PARA.                             
+          MOVE SQLCODE TO WS-SQLCODE.            
+          EVALUATE SQLCODE                       
+              WHEN 0                             
+                                 DISPLAY EMPNO                      
+                   DISPLAY LASTNAME-TEXT              
+                   DISPLAY BIRTHDATE                  
+                   DISPLAY SALARY                     
+               WHEN 100                               
+                   DISPLAY 'NO ROWS END ' WS-SQLCODE  
+               WHEN OTHER                             
+                   DISPLAY 'ERROR ' WS-SQLCODE        
+           END-EVALUATE.                              
+   400-CLOSE-EMPCUR-PARA.                             
+          EXEC SQL                                    
+             CLOSE EMP_CUR                            
+          END-EXEC.                                   
