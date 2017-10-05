@@ -1,0 +1,17 @@
+MAPAB89  DFHMSD TYPE=&SYSPARM,MODE=INOUT,TERM=ALL,                     X
+               LANG=COBOL,TIOAPFX=YES,CTRL=(FREEKB),DSATTS=COLOR,      X
+               MAPATTS=COLOR                                            
+ONLISCR  DFHMDI SIZE=(24,80),LINE=1,COLUMN=1                            
+         DFHMDF POS=(1,1),LENGTH=20,INITIAL='1. CREATE A CUSTOMER',    X
+               ATTRB=PROT,COLOR=PINK                                    
+         DFHMDF POS=(2,1),LENGTH=19,INITIAL='2. QUERY A CUSTOMER',     X
+               ATTRB=PROT,COLOR=NEUTRAL                                 
+         DFHMDF POS=(3,1),LENGTH=20,INITIAL='3. SEARCH FOR A BOOK',    X
+               ATTRB=PROT,COLOR=BLUE                                    
+         DFHMDF POS=(4,1),LENGTH=15,INITIAL='4. ORDER A BOOK',         X
+               ATTRB=PROT,COLOR=YELLOW                                  
+         DFHMDF POS=(5,1),LENGTH=7,INITIAL='5. EXIT',                  X
+               ATTRB=PROT,COLOR=RED                                     
+MSG      DFHMDF POS=(24,1),LENGTH=75,ATTRB=ASKIP                        
+     DFHMSD TYPE=FINAL 
+     END               
