@@ -1,0 +1,153 @@
+     IDENTIFICATION DIVISION.               
+     PROGRAM-ID.    PROGAB89.               
+     ENVIRONMENT DIVISION.                  
+     DATA DIVISION.                         
+     WORKING-STORAGE SECTION.               
+        EXEC SQL                            
+          INCLUDE SQLCA                     
+        END-EXEC.                           
+        EXEC SQL                            
+          INCLUDE TRAIN64                   
+        END-EXEC.                           
+       COPY MAPAB39.                        
+       COPY DFHAID.                         
+   01 WS-SQLCODE PIC -9(9).                 
+   01 WS-RAWTIME PIC S9(15) COMP-3.         
+       01 WS-EXIT-MSG PIC X(17) VALUE 'EXITING FROM MENU'. 
+    01 ERR-CODE  PIC S9(8) COMP.                        
+    01 WS-DT-TIME.                                      
+       03 WS-DATE   PIC X(8).                           
+       03 WS-TIME   PIC X(8).                           
+      LINKAGE SECTION.                                  
+    01 DFHCOMMAREA.                                     
+       02 LS-DT-TIME.                                   
+         03 LS-DATE PIC X(8).                           
+         03 LS-TIME PIC X(8).                           
+      PROCEDURE DIVISION.                               
+    000-MAIN-PARA.                                      
+          MOVE LOW-VALUES TO CUSTSCRI.                  
+          IF EIBCALEN = 0                               
+            PERFORM 400-DATE-TIME-PARA                  
+            PERFORM 100-SEND-PARA                       
+            PERFORM 998-RETURN-TRANSID-PARA             
+          ELSE                                          
+                    PERFORM 200-RECEIVE-PARA                 
+          PERFORM 100-SEND-PARA                    
+          PERFORM 998-RETURN-TRANSID-PARA          
+        END-IF.                                    
+  400-DATE-TIME-PARA.                              
+        EXEC CICS  ASKTIME ABSTIME(WS-RAWTIME)     
+                           END-EXEC.               
+        EXEC CICS  FORMATTIME ABSTIME(WS-RAWTIME)  
+                              DDMMYY(WS-DATE)      
+                              DATESEP              
+                              TIME(WS-TIME)        
+                              TIMESEP              
+                              END-EXEC.            
+        MOVE WS-DATE TO DATEO.                     
+        MOVE WS-TIME TO TIMEO.                     
+  100-SEND-PARA.                                   
+          MOVE WS-DATE TO DATEO.                   
+          MOVE WS-TIME TO TIMEO.                   
+                   EXEC CICS                                 
+            SEND MAP('CUSTSCR')                    
+                 MAPSET('MAPAB39')                 
+                 ERASE                             
+                 FREEKB                            
+         END-EXEC.                                 
+   200-RECEIVE-PARA.                               
+           MOVE LS-DATE TO WS-DATE.                
+           MOVE LS-TIME TO WS-TIME.                
+         EXEC CICS                                 
+            RECEIVE MAP('CUSTSCR')                 
+                    MAPSET('MAPAB39')              
+                    RESP(ERR-CODE)                 
+         END-EXEC.                                 
+         EVALUATE ERR-CODE                         
+             WHEN DFHRESP(NORMAL)                  
+                    PERFORM 310-KEY-CHECK-PARA     
+             WHEN DFHRESP(MAPFAIL)                 
+                                 IF EIBAID = DFHPF3                       
+                       PERFORM 997-SEND-EXIT-MSG-PARA        
+                       PERFORM 999-RETURN-CICS-PARA          
+                    ELSE                                     
+                       MOVE 'ENTER THE TRAIN NUMBER' TO MSGO 
+                    END-IF                                   
+             WHEN OTHER                                      
+                    MOVE 'OTHER' TO MSGO                     
+         END-EVALUATE.                                       
+   310-KEY-CHECK-PARA.                                       
+         EVALUATE(EIBAID)                                    
+             WHEN DFHPF3                                     
+                 PERFORM 997-SEND-EXIT-MSG-PARA              
+                 PERFORM 999-RETURN-CICS-PARA                
+             WHEN DFHPF5                                     
+                 MOVE LOW-VALUES TO CUSTSCRO                 
+                 MOVE 'SCREEN IS REFRESHED' TO MSGO          
+             WHEN DFHENTER                                   
+                              PERFORM 330-READ-TABLE-PARA           
+             WHEN OTHER                                
+                 MOVE 'PRESS F3/F5/ENTER' TO MSGO      
+         END-EVALUATE.                                 
+   320-VALUE-CHECK-PARA.                               
+         EVALUATE TRAINNOL                             
+             WHEN 0                                    
+                 MOVE 'ENTER TRAINNO VALUE' TO MSGO    
+             WHEN OTHER                                
+                 CONTINUE                              
+         END-EVALUATE.                                 
+   330-READ-TABLE-PARA.                                
+         MOVE TRAINNOI TO TRAINNO.                     
+          EXEC SQL                                     
+          SELECT TRAINNO,                              
+                 TRAINNAME,                            
+                 TRAINTYPE,                            
+                 TRAINDEPST,                           
+                                TRAINDEPTM,               
+               TRAINARRST,               
+               TRAINARRTM,               
+               TRAINFARE                 
+        INTO   :TRAINNO,                 
+               :TRAINNAME,               
+               :TRAINTYPE,               
+               :TRAINDEPST,              
+               :TRAINDEPTM,              
+               :TRAINARRST,              
+               :TRAINARRTM,              
+               :TRAINFARE                
+        FROM TRAIN139                    
+        WHERE TRAINNO = :TRAINNO         
+        END-EXEC.                        
+       MOVE SQLCODE TO WS-SQLCODE.       
+       EVALUATE SQLCODE                  
+          WHEN 0                         
+                          MOVE TRAINNAME TO TRAINNAO            
+                MOVE TRAINTYPE TO TRAINTYO            
+                MOVE TRAINDEPST TO DEPTSTNO           
+                MOVE TRAINDEPTM  TO DEPTTMO           
+                MOVE TRAINARRST TO ARRSTNO            
+                MOVE TRAINARRTM  TO ARRTMO            
+                MOVE TRAINFARE    TO FAREO            
+                MOVE 'TRAIN NUMBER FOUND' TO MSGO     
+           WHEN 100                                   
+                MOVE 'TRAIN NUMBER NOT FOUND' TO MSGO 
+           WHEN OTHER                                 
+                MOVE WS-SQLCODE TO MSGO               
+        END-EVALUATE.                                 
+  997-SEND-EXIT-MSG-PARA.                             
+        EXEC CICS                                     
+           SEND TEXT                                  
+           FROM(WS-EXIT-MSG)                          
+           LENGTH(LENGTH OF WS-EXIT-MSG)              
+                      ERASE                       
+           FREEKB                      
+        END-EXEC.                      
+  998-RETURN-TRANSID-PARA.             
+        EXEC CICS                      
+           RETURN TRANSID('AB89')      
+           COMMAREA(WS-DT-TIME)        
+        END-EXEC.                      
+  999-RETURN-CICS-PARA.                
+        EXEC CICS                      
+           RETURN                      
+        END-EXEC.                      
