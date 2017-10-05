@@ -1,0 +1,36 @@
+      IDENTIFICATION DIVISION.                             
+      PROGRAM-ID.    LAB15PGM.                             
+      AUTHOR.        MANASA.                               
+      INSTALLATION.  IBM E&T.                              
+      DATE-WRITTEN.  8/17/17.                              
+      DATE-COMPILED.                                       
+      SECURITY.      NONE.                                 
+   ******************************************************  
+   * MY FIRST PROGRAM                                      
+   ******************************************************  
+      ENVIRONMENT DIVISION.                                
+      DATA DIVISION.                                       
+      WORKING-STORAGE SECTION.                             
+    77 WS-EMPLOYEE-NUM  PIC X(6).                          
+    77 WS-EMPLOYEE-NAME  PIC X(10).                        
+        77 WS-DEPARTMENT  PIC X(2).                                     
+    77 WS-BASIC-PAY   PIC 9(5).                                     
+    77 WS-HRA   PIC 9(5).                                           
+    77 WS-CCA   PIC 9(5).                                           
+    77 WS-SHA   PIC 9(3) VALUE 250.                                 
+    77 WS-DRA   PIC 9(3) VALUE 400.                                 
+    77 WS-TD   PIC 9(5).                                            
+    77 WS-TA   PIC 9(5).                                            
+    77 WS-SALARY   PIC 9(6).                                        
+      PROCEDURE DIVISION.                                           
+          ACCEPT WS-EMPLOYEE-NUM.                                   
+          ACCEPT WS-EMPLOYEE-NAME.                                  
+          ACCEPT WS-DEPARTMENT.                                     
+          ACCEPT WS-BASIC-PAY.                                      
+          COMPUTE WS-HRA = WS-BASIC-PAY * 1 / 2.                    
+          COMPUTE WS-CCA = WS-BASIC-PAY * 1 / 5.                    
+          COMPUTE WS-TD = WS-BASIC-PAY - (WS-BASIC-PAY * 0.1) + 500.
+          COMPUTE WS-TA = WS-HRA + WS-CCA + WS-SHA + WS-DRA + WS-TD.
+                 COMPUTE WS-SALARY = (WS-BASIC-PAY + WS-TA) - WS-TD. 
+       DISPLAY WS-SALARY.                                  
+              STOP RUN.                                    
