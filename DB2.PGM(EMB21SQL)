@@ -1,0 +1,37 @@
+     IDENTIFICATION DIVISION.                 
+     PROGRAM-ID.    EMB21SQL.                 
+     ENVIRONMENT DIVISION.                    
+     DATA DIVISION.                           
+     WORKING-STORAGE SECTION.                 
+  01 WS-SQLCODE PIC -9(9).                    
+  01 WS-DEPTNO PIC X(3) VALUE 'e22'.          
+  01 WS-DEPTNAME PIC X(36) value 'software'.  
+  01 WS-MGRNO PIC X(6) value '000110'.        
+  01 WS-ADMRDEPT PIC X(3) value 'e01'.        
+         EXEC SQL                             
+           INCLUDE SQLCA                      
+         END-EXEC.                            
+         EXEC SQL                             
+           INCLUDE DEPARTME                   
+                    END-EXEC.                                                
+     PROCEDURE DIVISION.                                          
+  000-MAIN-PARA.                                                  
+       PERFORM 100-QUERY-PARA.                                    
+       PERFORM 200-EVALUATE-PARA.                                 
+             STOP RUN.                                            
+  100-QUERY-PARA.                                                 
+          EXEC SQL                                                
+            INSERT INTO DEPARTMENT                                
+            (DEPTNO,DEPTNAME,MGRNO,ADMRDEPT)                      
+            VALUES(:WS-DEPTNO,:WS-DEPTNAME,:WS-MGRNO,:WS-ADMRDEPT)
+          END-EXEC.                                               
+  200-EVALUATE-PARA.                                              
+          MOVE SQLCODE TO WS-SQLCODE.                             
+          EVALUATE SQLCODE                                        
+              WHEN 0                                              
+                  DISPLAY "INSERTED"                              
+              WHEN 100                                            
+                               DISPLAY 'NO ROWS END ' WS-SQLCODE      
+             WHEN OTHER                                 
+                 DISPLAY 'ERROR ' WS-SQLCODE            
+         END-EVALUATE.                                  
