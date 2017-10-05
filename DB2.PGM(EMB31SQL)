@@ -1,0 +1,64 @@
+      IDENTIFICATION DIVISION.                 
+      PROGRAM-ID.    emb3sql.                  
+      ENVIRONMENT DIVISION.                    
+      DATA DIVISION.                           
+      WORKING-STORAGE SECTION.                 
+   01 WS-SQLCODE PIC -9(9).                    
+          EXEC SQL                             
+            INCLUDE SQLCA                      
+          END-EXEC.                            
+          EXEC SQL                             
+            INCLUDE EMPLOYEE                   
+          END-EXEC.                            
+          EXEC SQL                             
+                     DECLARE DEL_CUR CURSOR FOR                             
+            SELECT EMPNO,WORKDEPT,SALARY                          
+            FROM EMPLOYEE                                         
+         END-EXEC.                                                
+     PROCEDURE DIVISION.                                          
+  000-MAIN-PARA.                                                  
+       MOVE 'a00' TO WORKDEPT.                                    
+       PERFORM 100-OPEN-UPDCUR-PARA.                              
+       IF SQLCODE = 0                                             
+         PERFORM 200-QUERY-PARA UNTIL SQLCODE = 100 OR SQLCODE < 0
+       ELSE                                                       
+         DISPLAY "ERROR IN OPEN"                                  
+       END-IF.                                                    
+       PERFORM 500-CLOSE-UPDCUR-PARA.                             
+             STOP RUN.                                            
+  100-OPEN-UPDCUR-PARA.                                           
+       EXEC SQL                                                   
+          OPEN DEL_CUR                                            
+                  END-EXEC.                                      
+   200-QUERY-PARA.                                     
+          EXEC SQL                                     
+            FETCH DEL_CUR                              
+            INTO :EMPNO,                               
+                 :WORKDEPT,                            
+                 :SALARY                               
+          END-EXEC.                                    
+          PERFORM 300-EVALUATE-PARA.                   
+   300-EVALUATE-PARA.                                  
+           MOVE SQLCODE TO WS-SQLCODE.                 
+           EVALUATE SQLCODE                            
+               WHEN 0                                  
+                   PERFORM 400-UPDATE-PARA             
+               WHEN 100                                
+                   DISPLAY 'NO ROWS END ' WS-SQLCODE   
+               WHEN OTHER                              
+                   DISPLAY 'ERROR ' WS-SQLCODE         
+                             END-EVALUATE.                        
+  400-UPDATE-PARA.                             
+          EXEC SQL                             
+            DELETE FROM EMPLOYEE               
+            WHERE CURRENT OF DEL_CUR           
+          END-EXEC.                            
+          IF SQLCODE = 0                       
+             DISPLAY 'deleted'                 
+          ELSE                                 
+             DISPLAY 'ERR'                     
+          END-IF.                              
+  500-CLOSE-UPDCUR-PARA.                       
+         EXEC SQL                              
+            CLOSE DEL_CUR                      
+         END-EXEC.                             
