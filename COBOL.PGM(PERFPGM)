@@ -1,0 +1,31 @@
+      IDENTIFICATION DIVISION.                             
+      PROGRAM-ID.    PERFPGM.                              
+      AUTHOR.        MANASA.                               
+      INSTALLATION.  IBM E&T.                              
+      DATE-WRITTEN.  8/17/17.                              
+      DATE-COMPILED.                                       
+      SECURITY.      NONE.                                 
+   ******************************************************  
+   * MY SECOND PROGRAM                                     
+   ******************************************************  
+      ENVIRONMENT DIVISION.                                
+      DATA DIVISION.                                       
+      WORKING-STORAGE SECTION.                             
+    01   WS-A      PIC 9(1) VALUE 4.                       
+    01   WS-B      PIC 9(1) VALUE 8.                       
+         01   WS-C      PIC 9(2).                         
+     01   WS-CNT    PIC 9(1) VALUE 5.                 
+       PROCEDURE DIVISION.                            
+     000-MAIN-PARA.                                   
+                  PERFORM 100-ADD-PARA WS-CNT TIMES.  
+                  STOP RUN.                           
+     100-ADD-PARA.                                    
+                  MOVE 2 TO WS-CNT.                   
+                  DISPLAY "A:" WS-A.                  
+                  DISPLAY "B:" WS-B.                  
+                  DISPLAY "C:" WS-C.                  
+                  COMPUTE WS-C = WS-A + WS-B.         
+                  DISPLAY "A:" WS-A.                  
+                  DISPLAY "B:" WS-B.                  
+                  DISPLAY "C:" WS-C.                  
+                  DISPLAY WS-CNT.                     
