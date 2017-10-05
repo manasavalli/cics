@@ -1,0 +1,281 @@
+   IDENTIFICATION DIVISION.                           
+   PROGRAM-ID.    STUD1391.                           
+   AUTHOR.        MANASA.                             
+   INSTALLATION.  IBM E&T.                            
+   DATE-WRITTEN.  8/17/17.                            
+   DATE-COMPILED.                                     
+   SECURITY.      NONE.                               
+******************************************************
+* READING STUDENT DETAILS FROM A FILE PROGRAM         
+******************************************************
+   ENVIRONMENT DIVISION.                              
+   INPUT-OUTPUT SECTION.                              
+   FILE-CONTROL.                                      
+        SELECT INFILE ASSIGN TO INDD                  
+        ORGANIZATION IS SEQUENTIAL                    
+                 ACCESS IS SEQUENTIAL                  
+         FILE STATUS IS WS-INFILE-ST.          
+                                               
+         SELECT STUDF1 ASSIGN TO STUDD1        
+         ORGANIZATION IS SEQUENTIAL            
+         ACCESS IS SEQUENTIAL                  
+         FILE STATUS IS WS-STUDF1-ST.          
+                                               
+         SELECT OUTFILE ASSIGN TO OUTDD        
+         ORGANIZATION IS SEQUENTIAL            
+         ACCESS IS SEQUENTIAL                  
+         FILE STATUS IS WS-OUTFILE-ST.         
+                                               
+    DATA DIVISION.                             
+    FILE SECTION.                              
+    FD INFILE                                  
+       RECORDING MODE IS F.                    
+  01 INREC.                                    
+        05 IV-STU-ID    PIC X(6).           
+      05 IV-STU-CLASS  PIC X(1).          
+      05 IV-STU-NAME   PIC X(20).         
+      05 IV-MARKS-LANG    PIC 9(3).       
+      05 IV-MARKS-MATH     PIC 9(3).      
+      05 IV-MARKS-SCIENCE   PIC 9(3).     
+      05 IV-MARKS-SS    PIC 9(3).         
+      05              PIC X(41).          
+    FD OUTFILE                            
+         RECORDING MODE IS F.             
+  01 OUTREC PIC X(80).                    
+    FD STUDF1                             
+          RECORDING MODE IS F.            
+  01 STUDF1RE.                            
+      05 FS-STU-ID    PIC X(6).           
+      05              PIC X(74).          
+    WORKING-STORAGE SECTION.              
+       EXEC SQL                           
+                 INCLUDE SQLCA                              
+        END-EXEC.                                    
+        EXEC SQL                                     
+          INCLUDE STUDENT                            
+        END-EXEC.                                    
+   01   RS-COUNT PIC 9(2) VALUE 12.                  
+   01   WS-SQLCODE PIC -9(9).                        
+   01   WS-INFILE-EOF PIC X VALUE 'N'.               
+      88 EOF-INFILE  VALUE 'Y'.                      
+   01   WS-OUTFILE-EOF PIC X VALUE 'N'.              
+      88 EOF-OUTFILE  VALUE 'Y'.                     
+   01   WS-STUDF1-EOF PIC X VALUE 'N'.               
+      88 EOF-STUDF1  VALUE 'Y'.                      
+   01  WS-OUTFILE-REC1.                              
+       05 RS-ADD    PIC X(15) VALUE 'MASTER/MISS'.   
+       05           PIC X(5).                        
+       05 RS-STU-NAME  PIC X(20).                    
+       05           PIC X(40).                       
+          01  WS-OUTFILE-REC2.                              
+       05           PIC X(27).                       
+       05 RS-ADD1   PIC X(6) VALUE 'HAVING'.         
+       05           PIC X(5).                        
+       05 RS-STU-ID PIC X(6).                        
+       05           PIC X(2).                        
+       05 RS-ADD11  PIC X(13) VALUE 'AS HIS/HER ID'. 
+       05           PIC X(21).                       
+   01  WS-OUTFILE-REC3.                              
+       05           PIC X(27).                       
+       05 RS-ADD2   PIC X(2) VALUE 'IN'.             
+       05           PIC X(1).                        
+       05 RS-STU-CLASS PIC X(1).                     
+       05           PIC X(1).                        
+       05 RS-ADD22  PIC X(5) VALUE 'CLASS'.          
+       05           PIC X(43).                       
+   01  WS-OUTFILE-REC4.                              
+       05           PIC X(27).                       
+              05 RS-RESULT PIC X(53).                         
+   01  WS-OUTFILE-REC5.                                
+       05           PIC X(27).                         
+       05 RS-ADD4   PIC X(1) VALUE ','.                
+       05           PIC X(1).                          
+       05 RS-MARKS  PIC X(7).                          
+       05           PIC X(1).                          
+       05 RS-ADD41  PIC X(7) VALUE 'MARKS ='.          
+       05           PIC X(1).                          
+       05 RS-VALUE  PIC 9(3).                          
+       05           PIC X(32).                         
+   01  WS-OUTFILE-REC6.                                
+       05           PIC X(27).                         
+       05 RS-ADD5   PIC X(1) VALUE ','.                
+       05           PIC X(1).                          
+       05 RS-MARKS1  PIC X(7).                         
+       05           PIC X(1).                          
+       05 RS-ADD52  PIC X(7) VALUE 'MARKS ='.          
+               05           PIC X(1).                   
+        05 RS-VALUE1  PIC 9(3).                  
+        05           PIC X(1).                   
+        05 RS-ADD54  PIC X(3) VALUE 'AND'.       
+        05           PIC X(28).                  
+    01  WS-OUTFILE-REC7.                         
+        05           PIC X(27).                  
+        05 RS-MARKS2  PIC X(7) VALUE 'TOTAL'.    
+        05           PIC X(1).                   
+        05 RS-ADD41  PIC X(7) VALUE 'MARKS ='.   
+        05           PIC X(1).                   
+        05 RS-TOTAL  PIC 9(3).                   
+        05           PIC X(32).                  
+    01  WS-OUTFILE-AST  PIC X(80) VALUE ALL '*'. 
+    77   WS-INFILE-ST      PIC X(2).             
+    77   WS-OUTFILE-ST      PIC X(2).            
+    77   WS-STUDF1-ST      PIC X(2).             
+    77   WS-RESULT         PIC 9(5).             
+      77   WS-AVG            PIC 9(5)V9(2).                       
+    PROCEDURE DIVISION.                                       
+  000-MAIN-PARA.                                              
+      DISPLAY '000'.                                          
+      PERFORM 100-OPEN-FILE-PARA.                             
+       IF SQLCODE = 0 AND  WS-INFILE-ST = '00'                
+         PERFORM 200-INSERT-PARA UNTIL EOF-INFILE             
+       ELSE                                                   
+         DISPLAY "ERROR IN OPEN"                              
+       END-IF.                                                
+       EXEC SQL                                               
+        COMMIT                                                
+       END-EXEC.                                              
+      IF  WS-STUDF1-ST = '00' AND                             
+              WS-OUTFILE-ST = '00'                            
+        PERFORM 500-WRITE-HDR-PARA                            
+        PERFORM 600-READ-FILE-PARA UNTIL WS-STUDF1-EOF = 'Y'  
+        PERFORM 900-WRITE-FOOTER-PARA                         
+              ELSE                                                  
+        DISPLAY 'ERROR IN OPEN '  WS-STUDF1-ST WS-OUTFILE-ST
+      END-IF.                                               
+      PERFORM 902-CLOSE-FILE-PARA.                          
+      STOP RUN.                                             
+    100-OPEN-FILE-PARA.                                     
+        DISPLAY '100'.                                      
+        OPEN INPUT INFILE.                                  
+        OPEN INPUT STUDF1.                                  
+        OPEN OUTPUT OUTFILE.                                
+    200-INSERT-PARA.                                        
+         DISPLAY '200'.                                     
+         READ INFILE                                        
+            AT END                                          
+              SET EOF-INFILE TO TRUE                        
+            NOT AT END                                      
+              PERFORM 300-WRITE-TABLE-PARA                  
+         END-READ.                                          
+             300-WRITE-TABLE-PARA.                                         
+         DISPLAY '300'.                                           
+         MOVE IV-STU-ID TO STU-ID.                                
+         MOVE IV-STU-CLASS TO STU-CLASS.                          
+         MOVE IV-STU-NAME TO STU-NAME.                            
+         MOVE IV-MARKS-LANG TO MARKS-LANG.                        
+         MOVE IV-MARKS-MATH  TO MARKS-MATH.                       
+         MOVE IV-MARKS-SCIENCE TO MARKS-SCIENCE.                  
+         MOVE IV-MARKS-SS TO MARKS-SS.                            
+              EXEC SQL                                            
+                 INSERT INTO STUDENT                              
+                 (STU_ID,STU_CLASS,STU_NAME,MARKS_LANG,MARKS_MATH,
+                   MARKS_SCIENCE,MARKS_SS)                        
+                 VALUES(:STU-ID,:STU-CLASS,:STU-NAME,:MARKS-LANG, 
+                      :MARKS-MATH,:MARKS-SCIENCE,:MARKS-SS)       
+              END-EXEC.                                           
+  500-WRITE-HDR-PARA.                                             
+         DISPLAY '500'.                                           
+                  WRITE OUTREC FROM WS-OUTFILE-AST.          
+  600-READ-FILE-PARA.                               
+         DISPLAY '600'.                             
+        READ STUDF1                                 
+           AT END                                   
+              SET EOF-STUDF1 TO TRUE                
+           NOT AT END                               
+              PERFORM 700-READ-TABLE-PARA           
+        END-READ.                                   
+  700-READ-TABLE-PARA.                              
+         DISPLAY '700'.                             
+         MOVE FS-STU-ID TO STU-ID.                  
+         EXEC SQL                                   
+           SELECT STU_ID,                           
+                  STU_CLASS,                        
+                  STU_NAME,                         
+                  MARKS_LANG,                       
+                  MARKS_MATH,                       
+                                    MARKS_SCIENCE,                   
+                  MARKS_SS                         
+           INTO   :STU-ID,                         
+                  :STU-CLASS,                      
+                  :STU-NAME,                       
+                  :MARKS-LANG,                     
+                  :MARKS-MATH,                     
+                  :MARKS-SCIENCE,                  
+                  :MARKS-SS                        
+           FROM STUDENT                            
+           WHERE  STU_ID = :STU-ID                 
+         END-EXEC.                                 
+            PERFORM 800-WRITE-PARA.                
+  800-WRITE-PARA.                                  
+         DISPLAY '800'.                            
+          DISPLAY "FS-STUDNO:  "  STU-ID.          
+          MOVE STU-NAME TO RS-STU-NAME             
+          WRITE OUTREC FROM WS-OUTFILE-REC1.       
+                    MOVE STU-ID TO RS-STU-ID.                     
+          WRITE OUTREC FROM WS-OUTFILE-REC2.            
+          MOVE STU-CLASS TO RS-STU-CLASS.               
+          WRITE OUTREC FROM WS-OUTFILE-REC3.            
+          PERFORM 903-EVALUATE-PARA.                    
+          MOVE 'LANG' TO RS-MARKS.                      
+          MOVE MARKS-LANG TO RS-VALUE.                  
+          WRITE OUTREC FROM WS-OUTFILE-REC5.            
+          MOVE 'MATH' TO RS-MARKS.                      
+          MOVE MARKS-MATH TO RS-VALUE.                  
+          WRITE OUTREC FROM WS-OUTFILE-REC5.            
+          MOVE 'SCIENCE' TO RS-MARKS.                   
+          MOVE MARKS-SCIENCE TO RS-VALUE.               
+          WRITE OUTREC FROM WS-OUTFILE-REC5.            
+          MOVE 'SS' TO RS-MARKS1.                       
+          MOVE MARKS-SS TO RS-VALUE1.                   
+          WRITE OUTREC FROM WS-OUTFILE-REC6.            
+          MOVE WS-RESULT TO RS-TOTAL.                   
+                   WRITE OUTREC FROM WS-OUTFILE-REC7.                       
+         DISPLAY "WRITTEN TO THE FILE".                           
+ 900-WRITE-FOOTER-PARA.                                           
+        WRITE OUTREC FROM WS-OUTFILE-AST.                         
+ 902-CLOSE-FILE-PARA.                                             
+       CLOSE INFILE.                                              
+       CLOSE STUDF1.                                              
+       CLOSE OUTFILE.                                             
+ 903-EVALUATE-PARA.                                               
+       COMPUTE WS-RESULT = MARKS-LANG + MARKS-MATH + MARKS-SCIENCE
+                                 + MARKS-SS.                      
+       COMPUTE WS-AVG = (WS-RESULT / 4) * 100.                    
+       DISPLAY "HAI".                                             
+       IF MARKS-LANG > 50 AND MARKS-MATH > 50 AND                 
+          MARKS-SCIENCE > 50 AND  MARKS-SS > 50                   
+          MOVE 'PASSED IN ALL SUBJECTS WITH' TO RS-RESULT         
+          WRITE OUTREC FROM WS-OUTFILE-REC4                       
+          DISPLAY 'TRUE'                                          
+                ELSE                                                
+         DISPLAY "HAI"                                    
+         MOVE 'FAILED IN' TO RS-RESULT(1:10)              
+         IF MARKS-LANG < 50                               
+            DISPLAY "HAI1"                                
+            MOVE 'LANG, ' TO RS-RESULT(RS-COUNT:6)        
+            COMPUTE RS-COUNT = RS-COUNT + 6               
+         END-IF                                           
+         IF MARKS-MATH < 50                               
+            DISPLAY "HAI2"                                
+            MOVE 'MATH, ' TO RS-RESULT(RS-COUNT:6)        
+            COMPUTE RS-COUNT = RS-COUNT + 6               
+         END-IF                                           
+         IF MARKS-SCIENCE < 50                            
+            DISPLAY "HAI3"                                
+            MOVE 'SCIENCE, ' TO RS-RESULT(RS-COUNT:9)     
+            COMPUTE RS-COUNT = RS-COUNT + 9               
+         END-IF                                           
+                    IF MARKS-SS < 50                         
+              DISPLAY "HAI4"                        
+              MOVE 'SS, ' TO RS-RESULT(RS-COUNT:4)  
+              COMPUTE RS-COUNT = RS-COUNT + 4       
+              DISPLAY RS-RESULT                     
+           END-IF                                   
+           PERFORM 905-LAST-PARA                    
+        END-IF.                                     
+  905-LAST-PARA.                                    
+              DISPLAY "HAI5"                        
+              MOVE 'WITH' TO RS-RESULT(RS-COUNT:4)  
+              COMPUTE RS-COUNT = RS-COUNT + 4       
+              WRITE OUTREC FROM WS-OUTFILE-REC4.    
+              DISPLAY RS-RESULT.                    
