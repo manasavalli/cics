@@ -1,0 +1,22 @@
+      IDENTIFICATION DIVISION.                             
+      PROGRAM-ID.    DATE1PGM.                             
+      AUTHOR.        MANASA.                               
+      INSTALLATION.  IBM E&T.                              
+      DATE-WRITTEN.  8/17/17.                              
+      DATE-COMPILED.                                       
+      SECURITY.      NONE.                                 
+   ******************************************************  
+   * MY FIRST PROGRAM                                      
+   ******************************************************  
+      ENVIRONMENT DIVISION.                                
+      DATA DIVISION.                                       
+      WORKING-STORAGE SECTION.                             
+    01 TODAY.                                              
+       05 WS-THIS-YEAR  PIC 9999.                          
+             05 WS-THIS-MONTH  PIC 99.                                 
+      05 WS-THIS-DAY  PIC 99.                                   
+     PROCEDURE DIVISION.                                        
+         ACCEPT TODAY FROM DATE YYYYMMDD.                       
+         DISPLAY TODAY.                                         
+         DISPLAY WS-THIS-YEAR "/" WS-THIS-MONTH "/" WS-THIS-DAY.
+                STOP RUN.                                       
