@@ -1,0 +1,24 @@
+        IDENTIFICATION DIVISION.                              
+        PROGRAM-ID.    EXAMPLE.                               
+        AUTHOR.        MANASA.                                
+        INSTALLATION.  IBM E&T.                               
+        DATE-WRITTEN.  8/17/17.                               
+        DATE-COMPILED.                                        
+        SECURITY.      NONE.                                  
+     ******************************************************   
+     * MY FIRST PROGRAM                                       
+     ******************************************************   
+        ENVIRONMENT DIVISION.                                 
+        DATA DIVISION.                                        
+        WORKING-STORAGE SECTION.                              
+      01 WS-VARS.                                             
+         05 WS-A  PIC X(2)                      VALUE "A".    
+                05 WS-B  PIC X(2)                      VALUE "B".      
+       05 FILLER PIC X(2)                     VALUE " ".      
+       05 WS-C  PIC  X(3)                     VALUE "C".      
+      PROCEDURE DIVISION.                                     
+          DISPLAY WS-VARS.                                    
+          DISPLAY WS-A.                                       
+          DISPLAY WS-B.                                       
+          DISPLAY WS-C.                                       
+                 STOP RUN.                                    
